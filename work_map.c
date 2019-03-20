@@ -6,7 +6,7 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/20 20:42:36 by mbartole          #+#    #+#             */
-/*   Updated: 2019/03/20 23:03:14 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/03/20 23:09:51 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,8 @@ void	work_map(t_sdl *sbox, unsigned int *map, int len)
 	while (++i < map_size)
 	{
 		if (cp[i].h)
-	    	map[i % sbox->map->offset + i / sbox->map->offset * len] = 0x42F4AD;
+	    	map[100500 + i % sbox->map->offset + i / sbox->map->offset * len] = 0x42F4AD;
 		else
-			map[i % sbox->map->offset + i / sbox->map->offset * len] = 0xFFFFFF;
+			map[100500 + i % sbox->map->offset + i / sbox->map->offset * len] = 0xFFFFFF;
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: bturcott <bturcott@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/19 21:10:19 by bturcott          #+#    #+#             */
-/*   Updated: 2019/03/20 22:50:02 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/03/21 00:28:45 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ static void		reprint_all(t_sdl *sdl)
 	SDL_LockTexture(sdl->text, NULL, (void **)&pixels, &pitch);
 	work_map(sdl, (unsigned int *)pixels, pitch / sizeof(int));
 	SDL_UnlockTexture(sdl->text);
-	SDL_RenderCopy(sdl->render, sdl->text, 0, &(SDL_Rect){0, 0, WIN_H, WIN_W});
+	SDL_RenderCopy(sdl->render, sdl->text, 0, &(SDL_Rect){0, 0, WIN_W, WIN_H});
 	SDL_RenderPresent(sdl->render);
 }
 
@@ -47,7 +47,7 @@ static void		init_sdl(t_sdl *sdl)
 	if (!(sdl->render = SDL_CreateRenderer(sdl->window, -1, REN_FLAGS)))
 		exit(clean_all(sdl, "Cant create renderer\n"));
 	if (!(sdl->text = SDL_CreateTexture(sdl->render, TXT_FORMAT, TXT_ACCESS,
-					WIN_W, WIN_H)))
+					WIN_H, WIN_W)))
 		exit(clean_all(sdl, "Cant create texture\n"));
 }
 
