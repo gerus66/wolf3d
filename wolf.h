@@ -6,7 +6,7 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/12/20 22:02:59 by mbartole          #+#    #+#             */
-/*   Updated: 2019/03/22 18:06:33 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/03/22 23:58:51 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,10 +48,10 @@ typedef struct	s_sdl
 
 
 # define NAME "Wolf3D"
-# define WIN_POS_X 100
-# define WIN_POS_Y 100
-# define WIN_W 1280
-# define WIN_H 800
+# define WIN_POS_X 1000
+# define WIN_POS_Y 1000
+# define WIN_W 320
+# define WIN_H 200
 # define WIN_FLAGS 0
 
 # define REN_FLAGS 0
@@ -65,6 +65,8 @@ typedef struct	s_sdl
 # define STEP (float)FOV / WIN_W
 # define DIST (int)(WIN_W / 2 / tan(FOV / 2))
 # define BLOCK 64
+
+# define ABS(x) ((x) > 0 ? (x) : -(x))
 
 /*
 ** utils
