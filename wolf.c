@@ -6,7 +6,7 @@
 /*   By: bturcott <bturcott@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/19 21:10:19 by bturcott          #+#    #+#             */
-/*   Updated: 2019/03/22 17:46:51 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/03/22 18:56:09 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ static void		reprint_all(t_sdl *sdl)
 //	work_map(sdl, (unsigned int *)pixels, pitch / sizeof(int));
 	work_it(sdl, (unsigned int *)pixels, pitch / sizeof(int));
 	SDL_UnlockTexture(sdl->text);
+	SDL_RenderClear(sdl->render);
 	SDL_RenderCopy(sdl->render, sdl->text, 0, &(SDL_Rect){0, 0, WIN_W, WIN_H});
 	SDL_RenderPresent(sdl->render);
 }
@@ -60,8 +61,11 @@ static void		sdl_loop(t_sdl *sdl)
 	{
 		if (SDL_PollEvent(&e))
 		{   
+			printf("%d\n", e.key.keysym.scancode);
 			if (e.key.keysym.scancode == 41 || e.quit.type == SDL_QUIT)
 				exit(clean_all(sdl, "exit on esc or red cross\n"));
+			if (e.key.keysym.scancode == 40)
+				sdl->cam.angle -= 0.1;
 			reprint_all(sdl);
 		}
 	}
