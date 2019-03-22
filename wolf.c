@@ -6,7 +6,7 @@
 /*   By: bturcott <bturcott@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/19 21:10:19 by bturcott          #+#    #+#             */
-/*   Updated: 2019/03/21 00:28:45 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/03/22 12:41:35 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ static void		init_sdl(t_sdl *sdl)
 	if (!(sdl->render = SDL_CreateRenderer(sdl->window, -1, REN_FLAGS)))
 		exit(clean_all(sdl, "Cant create renderer\n"));
 	if (!(sdl->text = SDL_CreateTexture(sdl->render, TXT_FORMAT, TXT_ACCESS,
-					WIN_H, WIN_W)))
+					WIN_W, WIN_H)))
 		exit(clean_all(sdl, "Cant create texture\n"));
 }
 
