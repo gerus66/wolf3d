@@ -6,7 +6,7 @@
 /*   By: bturcott <bturcott@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/19 21:10:19 by bturcott          #+#    #+#             */
-/*   Updated: 2019/03/22 12:41:35 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/03/22 17:46:51 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,8 @@ static void		reprint_all(t_sdl *sdl)
 	int pitch;
 
 	SDL_LockTexture(sdl->text, NULL, (void **)&pixels, &pitch);
-	work_map(sdl, (unsigned int *)pixels, pitch / sizeof(int));
+//	work_map(sdl, (unsigned int *)pixels, pitch / sizeof(int));
+	work_it(sdl, (unsigned int *)pixels, pitch / sizeof(int));
 	SDL_UnlockTexture(sdl->text);
 	SDL_RenderCopy(sdl->render, sdl->text, 0, &(SDL_Rect){0, 0, WIN_W, WIN_H});
 	SDL_RenderPresent(sdl->render);
@@ -73,6 +74,14 @@ int				main(int argc, char **argv)
 	t_sdl 	sdl;
 	int		fd;
 
+	sdl.cam.x = 500;
+	sdl.cam.y = 500;
+	sdl.cam.angle = M_PI / 2;
+	printf("Distance to proj plane %d\n", (int)DIST);
+	printf("View point on [%d, %d, %d] angle %.1f\n",
+			sdl.cam.x, sdl.cam.y, CAM_H, sdl.cam.angle);
+	printf("Step at angle is %.5f radian\n", STEP);
+	printf("Height of wall %d\n", WALL_H);
 	init_sdl(&sdl);
 	if (argc == 1 && (fd = open(MAP_DEFAULT, O_RDONLY)) == -1)
 		return (clean_all(&sdl, "Cant open default map\n"));
