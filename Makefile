@@ -22,7 +22,7 @@ FLAGS = -Wall -Wextra -Werror
 #MLX = /usr/local/lib/
 #MLXH = /usr/local/include
 SDLFL = -l SDL2
-SDL = /Users/*/.brew/Cellar/sdl2/2.0.9/lib/
+SDL = SDL/lib
 SDLH = SDL/includes
 
 all: lib $(NAME)
