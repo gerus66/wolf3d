@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   fdf.h                                              :+:      :+:    :+:   */
+/*   wolf.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: bturcott <bturcott@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/12/20 22:02:59 by mbartole          #+#    #+#             */
-/*   Updated: 2019/03/22 23:58:51 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/03/23 15:17:05 by bturcott         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,8 @@ typedef struct	s_sdl
 	SDL_Window		*window;
 	SDL_Renderer	*render;
 	SDL_Texture		*text;
+	SDL_Texture		*plane;
+	SDL_Texture		*mapa;
 	t_vector		*map;
 	t_view			cam;
 }				t_sdl;
@@ -50,8 +52,8 @@ typedef struct	s_sdl
 # define NAME "Wolf3D"
 # define WIN_POS_X 1000
 # define WIN_POS_Y 1000
-# define WIN_W 320
-# define WIN_H 200
+# define WIN_W 700
+# define WIN_H 700
 # define WIN_FLAGS 0
 
 # define REN_FLAGS 0
