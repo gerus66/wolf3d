@@ -6,7 +6,7 @@
 /*   By: bturcott <bturcott@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/19 21:10:19 by bturcott          #+#    #+#             */
-/*   Updated: 2019/03/23 16:46:13 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/03/23 19:47:55 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ void draw_map(t_sdl *sdl, unsigned int *map)
 	printf("%f %zu %d\n",sdl->cam.angle, sdl->map->len / sdl->map->offset / 12 , sdl->cam.y / BLOCK);
 	float angle = sdl->cam.angle;
 	while (angle < 0.0)
-		angle += M_PI;
+		angle += 2 * M_PI;
 	printf("%f\n", angle);
  	((unsigned int *)map)[sdl->cam.y / BLOCK * sdl->map->len / sdl->map->offset / 12 + sdl->cam.x / BLOCK ] = 0xFFFF00;
 
@@ -118,10 +118,30 @@ static void		sdl_loop(t_sdl *sdl)
 			printf("%d\n", e.key.keysym.scancode);
 			if (e.key.keysym.scancode == 41 || e.quit.type == SDL_QUIT)
 				exit(clean_all(sdl, "exit on esc or red cross\n"));
-			if (e.key.keysym.scancode == 79)
+			else if (e.key.keysym.scancode == 79)
 				sdl->cam.angle -= 0.1;
-			if (e.key.keysym.scancode == 80)
+			else if (e.key.keysym.scancode == 80)
 				sdl->cam.angle += 0.1;
+			else if (e.key.keysym.scancode == 26)
+			{
+				sdl->cam.x += 5 * cos(sdl->cam.angle);
+				sdl->cam.y -= 5 * sin(sdl->cam.angle);
+			}
+			else if (e.key.keysym.scancode == 22)
+			{
+				sdl->cam.x -= 5 * cos(sdl->cam.angle);
+				sdl->cam.y += 5 * sin(sdl->cam.angle);
+			}
+			else if (e.key.keysym.scancode == 4)
+			{
+				sdl->cam.x -= 5 * cos(sdl->cam.angle);
+				sdl->cam.y -= 5 * sin(sdl->cam.angle);
+			}
+			else if (e.key.keysym.scancode == 7)
+			{
+				sdl->cam.x += 5 * cos(sdl->cam.angle);
+				sdl->cam.y += 5 * sin(sdl->cam.angle);
+			}
 			reprint_all(sdl);
 		}
 	}
