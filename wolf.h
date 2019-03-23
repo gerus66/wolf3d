@@ -6,7 +6,7 @@
 /*   By: bturcott <bturcott@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/12/20 22:02:59 by mbartole          #+#    #+#             */
-/*   Updated: 2019/03/23 20:05:07 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/03/23 21:12:19 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,9 @@ typedef struct	s_sdl
 # define BLOCK 64
 
 # define ABS(x) ((x) > 0 ? (x) : -(x))
+
+# define MAP_W(x) ((int)x->offset)
+# define MAP_H(x) ((int)(x->len / x->offset / sizeof(t_point)))
 
 /*
 ** utils
