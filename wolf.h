@@ -6,7 +6,7 @@
 /*   By: bturcott <bturcott@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/12/20 22:02:59 by mbartole          #+#    #+#             */
-/*   Updated: 2019/03/23 15:17:05 by bturcott         ###   ########.fr       */
+/*   Updated: 2019/03/23 20:05:07 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ typedef struct	s_sdl
 	SDL_Texture		*text;
 	SDL_Texture		*plane;
 	SDL_Texture		*mapa;
+	unsigned char	flags[1];
 	t_vector		*map;
 	t_view			cam;
 }				t_sdl;
