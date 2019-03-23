@@ -6,7 +6,7 @@
 /*   By: bturcott <bturcott@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/19 21:10:19 by bturcott          #+#    #+#             */
-/*   Updated: 2019/03/23 16:17:53 by bturcott         ###   ########.fr       */
+/*   Updated: 2019/03/23 16:46:13 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,8 +118,10 @@ static void		sdl_loop(t_sdl *sdl)
 			printf("%d\n", e.key.keysym.scancode);
 			if (e.key.keysym.scancode == 41 || e.quit.type == SDL_QUIT)
 				exit(clean_all(sdl, "exit on esc or red cross\n"));
-			if (e.key.keysym.scancode == 40)
+			if (e.key.keysym.scancode == 79)
 				sdl->cam.angle -= 0.1;
+			if (e.key.keysym.scancode == 80)
+				sdl->cam.angle += 0.1;
 			reprint_all(sdl);
 		}
 	}
