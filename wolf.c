@@ -6,7 +6,7 @@
 /*   By: bturcott <bturcott@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/19 21:10:19 by bturcott          #+#    #+#             */
-/*   Updated: 2019/03/24 15:28:47 by bturcott         ###   ########.fr       */
+/*   Updated: 2019/03/24 18:05:48 by bturcott         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ static void		reprint_all(t_sdl *sdl)
 
 	SDL_LockTexture(sdl->mapa, NULL, (void **)&mappix, &pitch);
 	SDL_LockTexture(sdl->text, NULL, (void **)&pixels, &pitch);
-	work_it(sdl, (unsigned int *)pixels, pitch / sizeof(int));
+	//work_it(sdl, (unsigned int *)pixels, pitch / sizeof(int));
 	SDL_UnlockTexture(sdl->text);
 	SDL_UnlockTexture(sdl->mapa);
 
@@ -126,25 +126,24 @@ static void		sdl_loop(t_sdl *sdl)
 				sdl->cam.angle += M_PI / 32;
 			else if (e.key.keysym.scancode == 26)
 			{
-				sdl->cam.y += 5 * round(sin(sdl->cam.angle) * 100) / 100;
+				sdl->cam.y -= 5 * round(sin(sdl->cam.angle) * 100) / 100;
 				sdl->cam.x += 5 * round(cos(sdl->cam.angle) * 100) / 100;
 			}
 			else if (e.key.keysym.scancode == 22)
 			{
-				sdl->cam.y += 5 * round(sin(sdl->cam.angle + M_PI) * 100) / 100;
+				sdl->cam.y -= 5 * round(sin(sdl->cam.angle + M_PI) * 100) / 100;
 				sdl->cam.x += 5 * round(cos(sdl->cam.angle + M_PI) * 100) / 100;
 			}
 			else if (e.key.keysym.scancode == 4)
 			{
 				sdl->cam.y += 5 * round(sin(sdl->cam.angle + M_PI * 3 / 2) * 100) / 100;
-				sdl->cam.x += 5 * round(cos(sdl->cam.angle + M_PI * 3 / 2) * 100) / 100;
+				sdl->cam.x -= 5 * round(cos(sdl->cam.angle + M_PI * 3 / 2) * 100) / 100;
 			}
 			else if (e.key.keysym.scancode == 7)
 			{
 				sdl->cam.y += 5 * round(sin(sdl->cam.angle + M_PI / 2) * 100) / 100;
-				sdl->cam.x += 5 * round(cos(sdl->cam.angle + M_PI / 2) * 100) / 100;
+				sdl->cam.x -= 5 * round(cos(sdl->cam.angle + M_PI / 2) * 100) / 100;
 			}
-			
 			else if (e.key.keysym.scancode == 16 && e.key.type == SDL_KEYDOWN
 					&& !sdl->flags[0])
 				sdl->flags[0] = 1;
