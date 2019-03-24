@@ -6,7 +6,7 @@
 /*   By: bturcott <bturcott@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/20 20:42:36 by mbartole          #+#    #+#             */
-/*   Updated: 2019/03/23 21:23:56 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/03/24 09:18:47 by bturcott         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -151,7 +151,7 @@ void	work_it(t_sdl *sbox, unsigned int *map, int len)
 	//	printf("<%.1f VS %.1f > ", dist, ydist);
 		if (ydist > 0.1 && ydist < dist)
 		{
-			dist = ydist;
+			ydist = dist;
 			printf("Y! ");
 		}
 		else

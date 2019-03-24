@@ -6,7 +6,7 @@
 /*   By: bturcott <bturcott@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/19 21:10:19 by bturcott          #+#    #+#             */
-/*   Updated: 2019/03/23 20:07:36 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/03/24 15:28:47 by bturcott         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,26 +24,24 @@ void draw_map(t_sdl *sdl, unsigned int *map)
 		{
 			((unsigned int *)map)[i / sdl->map->offset * 7 + i % sdl->map->offset] = 0xFFFFFF;	
 		}
+		if (((unsigned int *)map)[(int)i] == 0x00FF00 || ((unsigned int *)map)[(int)i] == 0xFFFF00)
+			map[i] = 0;
 		i++;
 	}
 	printf("%f %zu %d\n",sdl->cam.angle, sdl->map->len / sdl->map->offset / 12 , sdl->cam.y / BLOCK);
 	float angle = sdl->cam.angle;
 	while (angle < 0.0)
 		angle += 2 * M_PI;
+	while (angle > 2 * M_PI)
+		angle -= 2 * M_PI;
 	printf("%f\n", angle);
  	((unsigned int *)map)[sdl->cam.y / BLOCK * sdl->map->len / sdl->map->offset / 12 + sdl->cam.x / BLOCK ] = 0xFFFF00;
-
-
-	((unsigned int *)map)[(sdl->cam.y / BLOCK) * sdl->map->len / sdl->map->offset / 12 + sdl->cam.x / BLOCK + 1] = 0;
-	((unsigned int *)map)[(sdl->cam.y / BLOCK - 1) * sdl->map->len / sdl->map->offset / 12 + sdl->cam.x / BLOCK ] = 0;
-	((unsigned int *)map)[(sdl->cam.y / BLOCK) * sdl->map->len / sdl->map->offset / 12 + sdl->cam.x / BLOCK - 1] = 0;
-	((unsigned int *)map)[(sdl->cam.y / BLOCK + 1) * sdl->map->len / sdl->map->offset / 12 + sdl->cam.x / BLOCK ] = 0;
 	
-	 if (angle  < 0.78)
+	 if (angle  < 1.57)
 		 ((unsigned int *)map)[(sdl->cam.y / BLOCK) * sdl->map->len / sdl->map->offset / 12 + sdl->cam.x / BLOCK + 1] = 0x00FF00;
-		else if (angle  < 1.57)
+		else if (angle  < 3.14)
 		((unsigned int *)map)[(sdl->cam.y / BLOCK - 1) * sdl->map->len / sdl->map->offset / 12 + sdl->cam.x / BLOCK ] = 0x00FF00;
-		else if (angle < 2.35)
+		else if (angle < 4.71)
 		((unsigned int *)map)[(sdl->cam.y / BLOCK) * sdl->map->len / sdl->map->offset / 12 + sdl->cam.x / BLOCK - 1] = 0x00FF00;
 		else 
 		((unsigned int *)map)[(sdl->cam.y / BLOCK + 1) * sdl->map->len / sdl->map->offset / 12 + sdl->cam.x / BLOCK ] = 0x00FF00;
@@ -123,35 +121,37 @@ static void		sdl_loop(t_sdl *sdl)
 			if (e.key.keysym.scancode == 41 || e.quit.type == SDL_QUIT)
 				exit(clean_all(sdl, "exit on esc or red cross\n"));
 			else if (e.key.keysym.scancode == 79)
-				sdl->cam.angle -= 0.1;
+				sdl->cam.angle -= M_PI / 32;
 			else if (e.key.keysym.scancode == 80)
-				sdl->cam.angle += 0.1;
+				sdl->cam.angle += M_PI / 32;
 			else if (e.key.keysym.scancode == 26)
 			{
-				sdl->cam.x += 5 * cos(sdl->cam.angle);
-				sdl->cam.y -= 5 * sin(sdl->cam.angle);
+				sdl->cam.y += 5 * round(sin(sdl->cam.angle) * 100) / 100;
+				sdl->cam.x += 5 * round(cos(sdl->cam.angle) * 100) / 100;
 			}
 			else if (e.key.keysym.scancode == 22)
 			{
-				sdl->cam.x -= 5 * cos(sdl->cam.angle);
-				sdl->cam.y += 5 * sin(sdl->cam.angle);
+				sdl->cam.y += 5 * round(sin(sdl->cam.angle + M_PI) * 100) / 100;
+				sdl->cam.x += 5 * round(cos(sdl->cam.angle + M_PI) * 100) / 100;
 			}
 			else if (e.key.keysym.scancode == 4)
 			{
-				sdl->cam.x -= 5 * cos(sdl->cam.angle);
-				sdl->cam.y -= 5 * sin(sdl->cam.angle);
+				sdl->cam.y += 5 * round(sin(sdl->cam.angle + M_PI * 3 / 2) * 100) / 100;
+				sdl->cam.x += 5 * round(cos(sdl->cam.angle + M_PI * 3 / 2) * 100) / 100;
 			}
 			else if (e.key.keysym.scancode == 7)
 			{
-				sdl->cam.x += 5 * cos(sdl->cam.angle);
-				sdl->cam.y += 5 * sin(sdl->cam.angle);
+				sdl->cam.y += 5 * round(sin(sdl->cam.angle + M_PI / 2) * 100) / 100;
+				sdl->cam.x += 5 * round(cos(sdl->cam.angle + M_PI / 2) * 100) / 100;
 			}
+			
 			else if (e.key.keysym.scancode == 16 && e.key.type == SDL_KEYDOWN
 					&& !sdl->flags[0])
 				sdl->flags[0] = 1;
 			else if (e.key.keysym.scancode == 16 && e.key.type == SDL_KEYDOWN
 					&& sdl->flags[0])
 				sdl->flags[0] = 0;
+				printf("x-> %d y-> %d cos-> %f sin-> %f\n", sdl->cam.x, sdl->cam.y, cos(sdl->cam.angle), sin(sdl->cam.angle));
 			reprint_all(sdl);
 		}
 	}
@@ -166,7 +166,7 @@ int				main(int argc, char **argv)
 
 	sdl.cam.x = 200;
 	sdl.cam.y = 200;
-	sdl.cam.angle = M_PI / 2;
+	sdl.cam.angle = (float)M_PI / 2;
 	printf("Distance to proj plane %d\n", (int)DIST);
 	printf("View point on [%d, %d, %d] angle %.1f\n",
 			sdl.cam.x, sdl.cam.y, CAM_H, sdl.cam.angle);
