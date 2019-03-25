@@ -6,7 +6,7 @@
 /*   By: bturcott <bturcott@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/19 21:10:19 by bturcott          #+#    #+#             */
-/*   Updated: 2019/03/25 21:07:14 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/03/25 21:15:57 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,30 @@ static void		rotations(t_sdl *sdl, SDL_Event e)
 	}
 }
 
+static void		movements(t_sdl *sdl, SDL_Event e)
+{
+	if (e.key.keysym.scancode == 26)
+	{
+		sdl->cam.y -= MOV_STEP * round(sin(sdl->cam.angle) * 100) / 100;
+		sdl->cam.x += MOV_STEP * round(cos(sdl->cam.angle) * 100) / 100;
+	}
+	else if (e.key.keysym.scancode == 22)
+	{
+		sdl->cam.y -= MOV_STEP * round(sin(sdl->cam.angle + M_PI) * 100) / 100;
+		sdl->cam.x += MOV_STEP * round(cos(sdl->cam.angle + M_PI) * 100) / 100;
+	}
+	else if (e.key.keysym.scancode == 4)
+	{
+		sdl->cam.y += MOV_STEP * round(sin(sdl->cam.angle + M_PI * 3 / 2) * 100) / 100;
+		sdl->cam.x -= MOV_STEP * round(cos(sdl->cam.angle + M_PI * 3 / 2) * 100) / 100;
+	}
+	else if (e.key.keysym.scancode == 7)
+	{
+		sdl->cam.y += MOV_STEP * round(sin(sdl->cam.angle + M_PI / 2) * 100) / 100;
+		sdl->cam.x -= MOV_STEP * round(cos(sdl->cam.angle + M_PI / 2) * 100) / 100;
+	}
+}
+
 static void		sdl_loop(t_sdl *sdl)
 {
 	SDL_Event e;
@@ -46,30 +70,11 @@ static void		sdl_loop(t_sdl *sdl)
 	{
 		if (SDL_PollEvent(&e))
 		{
-			rotations(sdl, e);
 			printf("%d\n", e.key.keysym.scancode);
+			rotations(sdl, e);
+			movements(sdl, e);
 			if (e.key.keysym.scancode == 41 || e.quit.type == SDL_QUIT)
 				exit(clean_all(sdl, "exit on esc or red cross\n"));
-			else if (e.key.keysym.scancode == 26)
-			{
-				sdl->cam.y -= 5 * round(sin(sdl->cam.angle) * 100) / 100;
-				sdl->cam.x += 5 * round(cos(sdl->cam.angle) * 100) / 100;
-			}
-			else if (e.key.keysym.scancode == 22)
-			{
-				sdl->cam.y -= 5 * round(sin(sdl->cam.angle + M_PI) * 100) / 100;
-				sdl->cam.x += 5 * round(cos(sdl->cam.angle + M_PI) * 100) / 100;
-			}
-			else if (e.key.keysym.scancode == 4)
-			{
-				sdl->cam.y += 5 * round(sin(sdl->cam.angle + M_PI * 3 / 2) * 100) / 100;
-				sdl->cam.x -= 5 * round(cos(sdl->cam.angle + M_PI * 3 / 2) * 100) / 100;
-			}
-			else if (e.key.keysym.scancode == 7)
-			{
-				sdl->cam.y += 5 * round(sin(sdl->cam.angle + M_PI / 2) * 100) / 100;
-				sdl->cam.x -= 5 * round(cos(sdl->cam.angle + M_PI / 2) * 100) / 100;
-			}
 			else if (e.key.keysym.scancode == 16 && e.key.type == SDL_KEYDOWN
 					&& !sdl->flags[0])
 				sdl->flags[0] = 1;
