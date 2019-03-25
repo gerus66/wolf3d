@@ -6,7 +6,7 @@
 /*   By: bturcott <bturcott@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/12/20 22:02:59 by mbartole          #+#    #+#             */
-/*   Updated: 2019/03/25 20:02:19 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/03/25 20:54:24 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ typedef struct	s_sdl
 	SDL_Texture		*plane;
 	SDL_Texture		*mapa;
 	unsigned char	flags[1];
+	int				mouse_pos[2];
 	t_vector		*map;
 	t_view			cam;
 }				t_sdl;
@@ -77,11 +78,14 @@ typedef struct	s_sdl
 # define QT_14(x) ((x) <= M_PI / 2 && (x) >= -M_PI / 2)
 # define QT_23(x) ((x) >= M_PI / 2 || (x) <= -M_PI / 2)
 
+# define ROT_STEP M_PI / 256
+
 /*
 ** utils
 */
 
-int     clean_all(t_sdl *sdl, char *msg);
+int     		clean_all(t_sdl *sdl, char *msg);
+void			reprint_all(t_sdl *sdl);
 
 /*
 ** read map from file
@@ -90,10 +94,10 @@ int     clean_all(t_sdl *sdl, char *msg);
 void            read_map(t_sdl *sbox, int fd);
 
 /*
-** working with map
+** create mini-map
 */
 
-void    work_map(t_sdl *sbox, unsigned int *map, int len_of_raw);
+void    draw_map(t_sdl *sdl, unsigned int *map);
 
 /*
 ** casting of walls
