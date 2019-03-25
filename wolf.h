@@ -6,7 +6,7 @@
 /*   By: bturcott <bturcott@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/12/20 22:02:59 by mbartole          #+#    #+#             */
-/*   Updated: 2019/03/23 21:12:19 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/03/25 21:15:13 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ typedef struct	s_sdl
 	SDL_Texture		*plane;
 	SDL_Texture		*mapa;
 	unsigned char	flags[1];
+	int				mouse_pos[2];
 	t_vector		*map;
 	t_view			cam;
 }				t_sdl;
@@ -47,7 +48,8 @@ typedef struct	s_sdl
 # define USAGE "./wolf [path_to_file_with_map]\n"
 
 # define MAP_DEFAULT "default.map"
-//# define H_MAP(x) (x->len / sizeof(t_point) / x->offset)
+# define MAP_W(x) ((int)x->offset)
+# define MAP_H(x) ((int)(x->len / x->offset / sizeof(t_point)))
 
 
 # define NAME "Wolf3D"
@@ -71,14 +73,20 @@ typedef struct	s_sdl
 
 # define ABS(x) ((x) > 0 ? (x) : -(x))
 
-# define MAP_W(x) ((int)x->offset)
-# define MAP_H(x) ((int)(x->len / x->offset / sizeof(t_point)))
+# define QT_12(x) ((x) >= 0)
+# define QT_34(x) ((x) <= 0)
+# define QT_14(x) ((x) <= M_PI / 2 && (x) >= -M_PI / 2)
+# define QT_23(x) ((x) >= M_PI / 2 || (x) <= -M_PI / 2)
+
+# define ROT_STEP M_PI / 128
+# define MOV_STEP BLOCK / 16
 
 /*
 ** utils
 */
 
-int     clean_all(t_sdl *sdl, char *msg);
+int     		clean_all(t_sdl *sdl, char *msg);
+void			reprint_all(t_sdl *sdl);
 
 /*
 ** read map from file
@@ -87,10 +95,21 @@ int     clean_all(t_sdl *sdl, char *msg);
 void            read_map(t_sdl *sbox, int fd);
 
 /*
-** working with map
+** create mini-map
 */
 
-void    work_map(t_sdl *sbox, unsigned int *map, int len_of_raw);
-void    work_it(t_sdl *sbox, unsigned int *map, int len_of_raw);
+void    draw_map(t_sdl *sdl, unsigned int *map);
+
+/*
+** casting of walls
+*/
+
+void    cast_walls(t_sdl *sbox, unsigned int *map);
+
+/*
+** painting of walls
+*/
+
+int     paint_walls(int h, float ang, char fl);
 
 #endif
