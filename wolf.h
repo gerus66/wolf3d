@@ -6,7 +6,7 @@
 /*   By: bturcott <bturcott@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/12/20 22:02:59 by mbartole          #+#    #+#             */
-/*   Updated: 2019/03/23 21:12:19 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/03/24 19:55:17 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,6 +91,6 @@ void            read_map(t_sdl *sbox, int fd);
 */
 
 void    work_map(t_sdl *sbox, unsigned int *map, int len_of_raw);
-void    work_it(t_sdl *sbox, unsigned int *map, int len_of_raw);
+void    work_it(t_sdl *sbox, unsigned int *map);
 
 #endif

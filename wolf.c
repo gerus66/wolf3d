@@ -6,7 +6,7 @@
 /*   By: bturcott <bturcott@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/19 21:10:19 by bturcott          #+#    #+#             */
-/*   Updated: 2019/03/24 18:05:48 by bturcott         ###   ########.fr       */
+/*   Updated: 2019/03/24 22:06:57 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ static void		reprint_all(t_sdl *sdl)
 
 	SDL_LockTexture(sdl->mapa, NULL, (void **)&mappix, &pitch);
 	SDL_LockTexture(sdl->text, NULL, (void **)&pixels, &pitch);
-	//work_it(sdl, (unsigned int *)pixels, pitch / sizeof(int));
+	work_it(sdl, (unsigned int *)pixels);
 	SDL_UnlockTexture(sdl->text);
 	SDL_UnlockTexture(sdl->mapa);
 
@@ -151,6 +151,10 @@ static void		sdl_loop(t_sdl *sdl)
 					&& sdl->flags[0])
 				sdl->flags[0] = 0;
 				printf("x-> %d y-> %d cos-> %f sin-> %f\n", sdl->cam.x, sdl->cam.y, cos(sdl->cam.angle), sin(sdl->cam.angle));
+			if (sdl->cam.angle > M_PI)
+				sdl->cam.angle -= 2 * M_PI;
+			else if (sdl->cam.angle < -M_PI)
+				sdl->cam.angle += 2 * M_PI;
 			reprint_all(sdl);
 		}
 	}
@@ -163,8 +167,8 @@ int				main(int argc, char **argv)
 	t_sdl 	sdl;
 	int		fd;
 
-	sdl.cam.x = 200;
-	sdl.cam.y = 200;
+	sdl.cam.x = 100;
+	sdl.cam.y = 300;
 	sdl.cam.angle = (float)M_PI / 2;
 	printf("Distance to proj plane %d\n", (int)DIST);
 	printf("View point on [%d, %d, %d] angle %.1f\n",
