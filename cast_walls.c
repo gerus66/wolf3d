@@ -6,7 +6,7 @@
 /*   By: bturcott <bturcott@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/20 20:42:36 by mbartole          #+#    #+#             */
-/*   Updated: 2019/03/25 19:03:41 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/03/25 20:02:05 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,8 +41,8 @@ static int		cur_column(int x, float ang)
 //	if (x % BLOCK)
 		return (x / BLOCK);
 //	if (QT_23(ang))
-//		return (x / BLOCK + 1);
-//	return (x / BLOCK - 1);
+//		return (x / BLOCK - 1);
+//	return (x / BLOCK + 1);
 }
 
 static int		cur_row(int y, float ang)
@@ -50,8 +50,8 @@ static int		cur_row(int y, float ang)
 //	if (y % BLOCK)
 		return (y / BLOCK);
 //	if (QT_12(ang))
-//		return (y / BLOCK + 1);
-//	return (y / BLOCK - 1);
+//		return (y / BLOCK - 1);
+//	return (y / BLOCK + 1);
 }
 
 static float	get_dist_x(t_sdl *sbox, float ang)
@@ -69,7 +69,7 @@ static float	get_dist_x(t_sdl *sbox, float ang)
 	while (cur_c >= 0 && cur_c < MAP_W(sbox->map) && next_r >= 0 &&
 			next_r < MAP_H(sbox->map))
 	{
-			printf("x[%d %d] ", x, next_r);
+//			printf("x[%d %d] ", x, next_r);
 		if (((t_point *)sbox->map->cont)[sbox->map->offset * next_r + cur_c].h)
 		{
 			return (sqrt(pow(sbox->cam.y -
@@ -99,7 +99,7 @@ static float	get_dist_y(t_sdl *sbox, float ang)
 	while (next_c >= 0 && next_c < MAP_W(sbox->map) && cur_r >= 0 &&
 			cur_r < MAP_H(sbox->map))
 	{
-		printf("y[%d %d] ", next_c, y);
+//		printf("y[%d %d] ", next_c, y);
 		if (((t_point *)sbox->map->cont)[sbox->map->offset * cur_r + next_c].h)
 		{
 //			printf("get it! --- ");
@@ -124,6 +124,7 @@ void	cast_walls(t_sdl *sbox, unsigned int *map)
 	float ydist;
 	int h;
 	float ang;
+	char	fl;
 
 	printf("map %d x %d \n", MAP_W(sbox->map), MAP_H(sbox->map));
 	printf("I m in [%d %d] looking at %d grad ", sbox->cam.x / BLOCK,
@@ -141,7 +142,8 @@ void	cast_walls(t_sdl *sbox, unsigned int *map)
 			ang = 2 * M_PI + ang;
 		dist = get_dist_x(sbox, ang);
 		ydist = get_dist_y(sbox, ang);
-		printf("<%.1f VS %.1f > ", dist, ydist);
+		fl = 'x';
+//		printf("<%.1f VS %.1f > ", dist, ydist);
 		if (dist < 0.1 && ydist < 0.1)
 		{
 			h = 0;
@@ -152,10 +154,11 @@ void	cast_walls(t_sdl *sbox, unsigned int *map)
 			if ((ydist > 0.1 && ydist < dist) || dist < 0.1)
 			{
 				dist = ydist;
-				printf("Y! ");
+				fl = 'y';
+//				printf("Y! ");
 			}
-			else
-				printf("X! ");
+//			else
+//				printf("X! ");
 			dist *= cos(ang - sbox->cam.angle);
 			h = WALL_H * DIST / dist;
 		}
@@ -163,7 +166,7 @@ void	cast_walls(t_sdl *sbox, unsigned int *map)
 		while (++j < WIN_H)
 		{
 			if (j > WIN_H / 2 - h && j < WIN_H / 2 + h)
-				map[i + j * WIN_W] = 0x42F4AD;
+				map[i + j * WIN_W] = paint_walls(h, ang, fl);
 			else
 				map[i + j * WIN_W] = 0x0;
 		}
