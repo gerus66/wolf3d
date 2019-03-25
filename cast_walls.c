@@ -6,7 +6,7 @@
 /*   By: bturcott <bturcott@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/20 20:42:36 by mbartole          #+#    #+#             */
-/*   Updated: 2019/03/25 00:11:55 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/03/25 19:03:41 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,9 @@
 
 static int		first_shift_x(float ang, int bound, int x, int y)
 {
-	if (ang > 0)
+	if (QT_12(ang))
 		bound++;
-	if (ang + M_PI / 2 >= 0)
+	if (QT_14(ang))
 		return (x + (y - bound * BLOCK) / tan(ang));
 	else
 		return (x - (y - bound * BLOCK) / tan(M_PI - ang));
@@ -25,14 +25,33 @@ static int		first_shift_x(float ang, int bound, int x, int y)
 static int		first_shift_y(float ang, int bound, int x, int y)
 {
 //	printf("%.1f %d %d %d | ", ang, bound, x, y);
-	if (ang > M_PI / 2 || ang < -M_PI / 2)
+	if (QT_23(ang))
+	{
 		bound++;
-	if (ang > M_PI / 2 || ang < -M_PI / 2)
 		ang = ang - M_PI;
-	if (ang >= 0)
+	}
+	if (QT_12(ang))
 		return (y - (bound * BLOCK - x) * tan(ang));
 	else
 		return (y + (x - bound * BLOCK) * tan(ang));
+}
+
+static int		cur_column(int x, float ang)
+{
+//	if (x % BLOCK)
+		return (x / BLOCK);
+//	if (QT_23(ang))
+//		return (x / BLOCK + 1);
+//	return (x / BLOCK - 1);
+}
+
+static int		cur_row(int y, float ang)
+{
+//	if (y % BLOCK)
+		return (y / BLOCK);
+//	if (QT_12(ang))
+//		return (y / BLOCK + 1);
+//	return (y / BLOCK - 1);
 }
 
 static float	get_dist_x(t_sdl *sbox, float ang)
@@ -42,23 +61,24 @@ static float	get_dist_x(t_sdl *sbox, float ang)
 	int	cur_c;
 	int xa;
 	
-	next_r = (ang >= 0) ? sbox->cam.y / BLOCK - 1 : sbox->cam.y / BLOCK + 1;
-	xa = ABS(BLOCK / tan((ang <= M_PI / 2 && ang >= -M_PI / 2) ? ang : M_PI - ang));
+	next_r = (QT_12(ang)) ? sbox->cam.y / BLOCK - 1 : sbox->cam.y / BLOCK + 1;
+	xa = ABS(BLOCK / tan((QT_14(ang)) ? ang : M_PI - ang));
 	x = first_shift_x(ang, next_r, sbox->cam.x, sbox->cam.y);
-	cur_c = x / BLOCK;
+	cur_c = cur_column(x, ang);
+//	printf("fsX %d nextR %d ", x, next_r);
 	while (cur_c >= 0 && cur_c < MAP_W(sbox->map) && next_r >= 0 &&
 			next_r < MAP_H(sbox->map))
 	{
+			printf("x[%d %d] ", x, next_r);
 		if (((t_point *)sbox->map->cont)[sbox->map->offset * next_r + cur_c].h)
 		{
-			printf("x[%d %d] ", next_r, cur_c);
 			return (sqrt(pow(sbox->cam.y -
-					(ang > 0 ? next_r + 1 : next_r) * BLOCK, 2) +
+					(QT_12(ang) ? next_r + 1 : next_r) * BLOCK, 2) +
 						pow(sbox->cam.x - x, 2)));
 		}
-		next_r = (ang > 0) ? next_r - 1 : next_r + 1;
-		x = (ang <= M_PI / 2 && ang >= -M_PI / 2) ? x + xa : x - xa;
-		cur_c = x / BLOCK;
+		next_r = (QT_12(ang)) ? next_r - 1 : next_r + 1;
+		x = (QT_14(ang)) ? x + xa : x - xa;
+		cur_c = cur_column(x, ang);
 	}
 	return (0.0);
 }
@@ -70,32 +90,33 @@ static float	get_dist_y(t_sdl *sbox, float ang)
 	int	next_c;
 	int ya;
 	
-	next_c = (ang <= M_PI / 2 && ang >= -M_PI / 2) ?
-		sbox->cam.x / BLOCK + 1 : sbox->cam.x / BLOCK - 1;
-	ya = ABS(BLOCK * tan((ang <= M_PI / 2 && ang >= -M_PI / 2) ? ang : M_PI - ang));
+	next_c = (QT_14(ang)) ? sbox->cam.x / BLOCK + 1 : sbox->cam.x / BLOCK - 1;
+	ya = ABS(BLOCK * tan((QT_14(ang)) ? ang : M_PI - ang));
 	y = first_shift_y(ang, next_c, sbox->cam.x, sbox->cam.y);
-	cur_r = y / BLOCK;
-//	printf("fsh %d curr %d ", y, cur_r);
+	cur_r = cur_row(y, ang);
+//	cur_r = y / BLOCK;
+//	printf("fsY %d nextC %d ", y, next_c);
 	while (next_c >= 0 && next_c < MAP_W(sbox->map) && cur_r >= 0 &&
 			cur_r < MAP_H(sbox->map))
 	{
-//		printf("y[%d %d] ", cur_r, next_c);
+		printf("y[%d %d] ", next_c, y);
 		if (((t_point *)sbox->map->cont)[sbox->map->offset * cur_r + next_c].h)
 		{
 //			printf("get it! --- ");
-			printf("y[%d %d] ", cur_r, next_c);
+//			printf("y[%d %d] ", cur_r, next_c);
 			return (sqrt(pow(sbox->cam.x -
-					(ang > M_PI / 2 || ang < -M_PI / 2 ? next_c + 1 : next_c) * BLOCK, 2) +
+					(QT_23(ang) ? next_c + 1 : next_c) * BLOCK, 2) +
 					 pow(sbox->cam.y - y, 2)));
 		}
-		next_c = (ang <= M_PI / 2 && ang >= -M_PI / 2) ? next_c + 1 : next_c - 1;
-		y = (ang > 0) ? y - ya : y + ya;
-		cur_r = y / BLOCK;
+		next_c = QT_14(ang) ? next_c + 1 : next_c - 1;
+		y = QT_12(ang) ? y - ya : y + ya;
+//		cur_r = y / BLOCK - (y % BLOCK) ? 0 : 1;
+		cur_r = cur_row(y, ang);
 	}
 	return (0.0);
 }
 
-void	work_it(t_sdl *sbox, unsigned int *map)
+void	cast_walls(t_sdl *sbox, unsigned int *map)
 {
 	int	i;
 	int	j;
@@ -121,21 +142,20 @@ void	work_it(t_sdl *sbox, unsigned int *map)
 		dist = get_dist_x(sbox, ang);
 		ydist = get_dist_y(sbox, ang);
 		printf("<%.1f VS %.1f > ", dist, ydist);
-		if (ydist > 0.1 && ydist < dist)
-		{
-			dist = ydist;
-			printf("Y! ");
-		}
-		else
-//			;
-			printf("X! ");
-		if (dist < 0.001)
+		if (dist < 0.1 && ydist < 0.1)
 		{
 			h = 0;
-			printf("0! ");
+//			printf("0! ");
 		}
 		else
 		{
+			if ((ydist > 0.1 && ydist < dist) || dist < 0.1)
+			{
+				dist = ydist;
+				printf("Y! ");
+			}
+			else
+				printf("X! ");
 			dist *= cos(ang - sbox->cam.angle);
 			h = WALL_H * DIST / dist;
 		}

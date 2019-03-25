@@ -17,7 +17,7 @@ OBJ = $(SRC:.c=.o)
 HDR = wolf.h
 LIB = libft/libft.a
 LIBDIR = libft/
-FLAGS = -Wall -Wextra -Werror
+FLAGS =
 #MFL = -lmlx -framework OpenGL -framework AppKit
 #MLX = /usr/local/lib/
 #MLXH = /usr/local/include

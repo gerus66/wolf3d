@@ -6,7 +6,7 @@
 /*   By: bturcott <bturcott@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/19 21:10:19 by bturcott          #+#    #+#             */
-/*   Updated: 2019/03/24 22:06:57 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/03/25 18:01:26 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ static void		reprint_all(t_sdl *sdl)
 
 	SDL_LockTexture(sdl->mapa, NULL, (void **)&mappix, &pitch);
 	SDL_LockTexture(sdl->text, NULL, (void **)&pixels, &pitch);
-	work_it(sdl, (unsigned int *)pixels);
+	cast_walls(sdl, (unsigned int *)pixels);
 	SDL_UnlockTexture(sdl->text);
 	SDL_UnlockTexture(sdl->mapa);
 
@@ -121,9 +121,9 @@ static void		sdl_loop(t_sdl *sdl)
 			if (e.key.keysym.scancode == 41 || e.quit.type == SDL_QUIT)
 				exit(clean_all(sdl, "exit on esc or red cross\n"));
 			else if (e.key.keysym.scancode == 79)
-				sdl->cam.angle -= M_PI / 32;
+				sdl->cam.angle -= M_PI / 64;
 			else if (e.key.keysym.scancode == 80)
-				sdl->cam.angle += M_PI / 32;
+				sdl->cam.angle += M_PI / 64;
 			else if (e.key.keysym.scancode == 26)
 			{
 				sdl->cam.y -= 5 * round(sin(sdl->cam.angle) * 100) / 100;

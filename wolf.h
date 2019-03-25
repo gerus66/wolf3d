@@ -6,7 +6,7 @@
 /*   By: bturcott <bturcott@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/12/20 22:02:59 by mbartole          #+#    #+#             */
-/*   Updated: 2019/03/24 19:55:17 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/03/25 17:50:21 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,8 @@ typedef struct	s_sdl
 # define USAGE "./wolf [path_to_file_with_map]\n"
 
 # define MAP_DEFAULT "default.map"
-//# define H_MAP(x) (x->len / sizeof(t_point) / x->offset)
+# define MAP_W(x) ((int)x->offset)
+# define MAP_H(x) ((int)(x->len / x->offset / sizeof(t_point)))
 
 
 # define NAME "Wolf3D"
@@ -71,8 +72,10 @@ typedef struct	s_sdl
 
 # define ABS(x) ((x) > 0 ? (x) : -(x))
 
-# define MAP_W(x) ((int)x->offset)
-# define MAP_H(x) ((int)(x->len / x->offset / sizeof(t_point)))
+# define QT_12(x) ((x) >= 0)
+# define QT_34(x) ((x) <= 0)
+# define QT_14(x) ((x) <= M_PI / 2 && (x) >= -M_PI / 2)
+# define QT_23(x) ((x) >= M_PI / 2 || (x) <= -M_PI / 2)
 
 /*
 ** utils
@@ -91,6 +94,6 @@ void            read_map(t_sdl *sbox, int fd);
 */
 
 void    work_map(t_sdl *sbox, unsigned int *map, int len_of_raw);
-void    work_it(t_sdl *sbox, unsigned int *map);
+void    cast_walls(t_sdl *sbox, unsigned int *map);
 
 #endif
