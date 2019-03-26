@@ -6,7 +6,7 @@
 /*   By: bturcott <bturcott@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/20 20:42:36 by mbartole          #+#    #+#             */
-/*   Updated: 2019/03/26 17:47:46 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/03/26 19:21:01 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,6 @@ static int		first_shift_x(float ang, int bound, int x, int y)
 
 static int		first_shift_y(float ang, int bound, int x, int y)
 {
-//	printf("%.1f %d %d %d | ", ang, bound, x, y);
 	if (QT_23(ang))
 	{
 		bound++;
@@ -60,14 +59,13 @@ static float	get_dist_x(t_sdl *sbox, float ang, int *fl, int *x)
 	int	cur_c;
 	int xa;
 
-//	*fl = 1;	
 	next_r = (QT_12(ang)) ? sbox->cam.y / BLOCK - 1 : sbox->cam.y / BLOCK + 1;
 	xa = ABS(BLOCK / tan((QT_14(ang)) ? ang : M_PI - ang));
 	*x = first_shift_x(ang, next_r, sbox->cam.x, sbox->cam.y);
 	cur_c = cur_column(*x, ang);
 	while (1)
 	{
-		if (cur_c >= MAP_W(sbox->map) || cur_c <= -1 || *x < 0 ||
+		if (cur_c >= MAP_W(sbox->map) || *x < 0 ||
 				next_r >= MAP_H(sbox->map) || next_r <= -1)
 		{
 			*fl = 0;
@@ -80,8 +78,8 @@ static float	get_dist_x(t_sdl *sbox, float ang, int *fl, int *x)
 		if (((t_point *)sbox->map->cont)[sbox->map->offset * next_r + cur_c].h)
 		{
 			*fl = 1;
-			printf("X");
-//			printf("x[%d %d] ", *x, next_r);
+//			printf("X");
+			printf("x[%d %d] ", *x, next_r);
 			return (sqrt(pow(sbox->cam.y -
 					(QT_12(ang) ? next_r + 1 : next_r) * BLOCK, 2) +
 						pow(sbox->cam.x - *x, 2)));
@@ -92,10 +90,6 @@ static float	get_dist_x(t_sdl *sbox, float ang, int *fl, int *x)
 	}
 	*fl = 0;
 	return (0.0);
-//	*fl = 0;
-//	return (sqrt(pow(sbox->cam.y - 
-//		(QT_12(ang) ? next_r + 1 : next_r) * BLOCK, 2) + 
-//				pow(sbox->cam.x - *x, 2)));
 }
 
 static float	get_dist_y(t_sdl *sbox, float ang, int *fl, int *y)
@@ -112,7 +106,7 @@ static float	get_dist_y(t_sdl *sbox, float ang, int *fl, int *y)
 //	printf("fsY %d nextC %d ", y, next_c);
 	while (1)
 	{
-		if (cur_r >= MAP_H(sbox->map) || cur_r <= -1 || *y < 0 || 
+		if (cur_r >= MAP_H(sbox->map) || *y < 0 || 
 				next_c >= MAP_W(sbox->map) || next_c <= -1)
 		{
 			*fl = 0;
@@ -125,8 +119,8 @@ static float	get_dist_y(t_sdl *sbox, float ang, int *fl, int *y)
 		if (((t_point *)sbox->map->cont)[sbox->map->offset * cur_r + next_c].h)
 		{
 			*fl = 1;
-			printf("Y");
-//			printf("y[%d %d] \n", next_c, *y);
+//			printf("Y");
+			printf("y[%d %d] ", next_c, *y);
 			return (sqrt(pow(sbox->cam.x -
 					(QT_23(ang) ? next_c + 1 : next_c) * BLOCK, 2) +
 					 pow(sbox->cam.y - *y, 2)));
@@ -137,9 +131,6 @@ static float	get_dist_y(t_sdl *sbox, float ang, int *fl, int *y)
 	}
 	*fl = 0;
 	return (0.0);
-//	return (sqrt(pow(sbox->cam.x -
-//					(QT_23(ang) ? next_c + 1 : next_c) * BLOCK, 2) +
-//				pow(sbox->cam.y - *y, 2)));
 }
 
 # define N 0x42F4AD
@@ -194,7 +185,6 @@ void	cast_walls(t_sdl *sbox, unsigned int *map)
 		int flx, fly;
 		dist = get_dist_x(sbox, ang, &flx, &offset);
 		ydist = get_dist_y(sbox, ang, &fly, &yoffset);
-//		printf("<%.1f VS %.1f > %d %d \n", dist, ydist, offset, yoffset);
 		if (!flx && !fly)
 		{
 			fl = 's';
@@ -207,6 +197,7 @@ void	cast_walls(t_sdl *sbox, unsigned int *map)
 		}
 		else
 		{
+			printf("<%.1f VS %.1f > ", dist, ydist);
 			fl = 'x';
 			if ((fly && ydist < dist) || !flx)
 			{
@@ -218,13 +209,15 @@ void	cast_walls(t_sdl *sbox, unsigned int *map)
 		dist *= cos(ang - sbox->cam.angle);
 		h = WALL_H * DIST / dist;
 		printf("/%d %c/ ", offset % BLOCK, fl);
-		j = -1;
+		if (sbox->flags[1])	
+			paint_walls(sbox, ang, (int[]){h, i, offset % BLOCK}, fl);
+		else
+		{
+			j = -1;
 		while (++j < WIN_H)
 		{
-			if (sbox->flags[1])	
-				paint_walls(sbox, ang, (int[]){h, i, offset % BLOCK}, fl);
-			else
-				map[i + j * WIN_W] = just_color(ang, h, j, fl);
+			map[i + j * WIN_W] = just_color(ang, h, j, fl);
+		}
 		}
 		ang -= STEP;
 	}
