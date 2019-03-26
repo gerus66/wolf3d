@@ -6,7 +6,7 @@
 /*   By: bturcott <bturcott@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/25 19:57:27 by mbartole          #+#    #+#             */
-/*   Updated: 2019/03/26 12:53:26 by bturcott         ###   ########.fr       */
+/*   Updated: 2019/03/26 13:16:30 by bturcott         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,17 +44,16 @@ int select_texture(float ang, char fl)
 		return (3);
 }
 
-int		paint_walls(t_sdl *sdl, float ang, int h, int offset, int x, char side)
+void		paint_walls(t_sdl *sdl, float ang, int *params, char side)
 {
 	//printf("%d\n", offset);
 	SDL_Rect texture;
 	SDL_Rect object;
 
-	texture.h = WIN_H / 2 + h;
+	texture.h = WIN_H / 2 + params[0];
 	texture.w = 1;
-	texture.x = x;
-	texture.y = WIN_H / 2 - h;
-	convert_texture(sdl->texture_pack[select_texture(ang, side)], texture, &object, offset);
-	SDL_RenderCopy(sdl->render, sdl->texture_pack[select_texture(ang, side)], &object, &texture);
-	return (0xFFFFFF);
+	texture.x = params[1];
+	texture.y = WIN_H / 2 - params[0];
+	convert_texture(sdl->texture_pack[1], texture, &object, params[2]);
+	SDL_RenderCopy(sdl->render, sdl->texture_pack[1], &object, &texture);
 }

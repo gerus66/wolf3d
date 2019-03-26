@@ -6,7 +6,7 @@
 /*   By: bturcott <bturcott@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/12/20 22:02:59 by mbartole          #+#    #+#             */
-/*   Updated: 2019/03/25 21:15:13 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/03/26 13:13:57 by bturcott         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ typedef struct	s_sdl
 	int				mouse_pos[2];
 	t_vector		*map;
 	t_view			cam;
+	SDL_Texture		**texture_pack;
 }				t_sdl;
 
 # define USAGE "./wolf [path_to_file_with_map]\n"
@@ -110,6 +111,7 @@ void    cast_walls(t_sdl *sbox, unsigned int *map);
 ** painting of walls
 */
 
-int     paint_walls(int h, float ang, char fl);
+SDL_Texture             **load_textures(t_sdl *sdl);
+void					paint_walls(t_sdl *sdl, float ang, int *params, char side);
 
 #endif
