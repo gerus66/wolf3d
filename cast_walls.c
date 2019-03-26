@@ -6,7 +6,7 @@
 /*   By: bturcott <bturcott@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/20 20:42:36 by mbartole          #+#    #+#             */
-/*   Updated: 2019/03/26 12:58:58 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/03/26 13:14:40 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,7 +134,7 @@ void	cast_walls(t_sdl *sbox, unsigned int *map)
 	int h;
 	float ang;
 	char	fl;
-	int		offset;
+	int		offset, yoffset;
 
 	printf("map %d x %d \n", MAP_W(sbox->map), MAP_H(sbox->map));
 	printf("I m in [%d %d] looking at %d grad ", sbox->cam.x / BLOCK,
@@ -152,13 +152,16 @@ void	cast_walls(t_sdl *sbox, unsigned int *map)
 			ang = 2 * M_PI + ang;
 		int flx, fly;
 		dist = get_dist_x(sbox, ang, &flx, &offset);
-		ydist = get_dist_y(sbox, ang, &fly, &offset);
+		ydist = get_dist_y(sbox, ang, &fly, &yoffset);
 //		printf("<%.1f VS %.1f > ", dist, ydist);
 		if (!flx && !fly)
 		{
 			fl = 's';
 			if (ydist < dist)
+			{
 				dist = ydist;
+				offset = yoffset;
+			}
 		}
 		else
 		{
