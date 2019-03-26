@@ -6,7 +6,7 @@
 /*   By: bturcott <bturcott@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/19 21:10:19 by bturcott          #+#    #+#             */
-/*   Updated: 2019/03/25 21:15:57 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/03/26 14:25:52 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,6 +81,12 @@ static void		sdl_loop(t_sdl *sdl)
 			else if (e.key.keysym.scancode == 16 && e.key.type == SDL_KEYDOWN
 					&& sdl->flags[0])
 				sdl->flags[0] = 0;
+			else if (e.key.keysym.scancode == 23 && e.key.type == SDL_KEYDOWN
+					&& !sdl->flags[1])
+				sdl->flags[1] = 1;
+			else if (e.key.keysym.scancode == 23 && e.key.type == SDL_KEYDOWN
+					&& sdl->flags[1])
+				sdl->flags[1] = 0;
 			printf("x-> %d y-> %d cos-> %f sin-> %f\n", sdl->cam.x, sdl->cam.y, cos(sdl->cam.angle), sin(sdl->cam.angle));
 			reprint_all(sdl);
 		}
@@ -106,6 +112,7 @@ static void		init_sdl(t_sdl *sdl)
 					sdl->map->offset, sdl->map->len / sdl->map->offset / 12)))
 		exit(clean_all(sdl, "Cant create the map\n"));
 	sdl->flags[0] = 0;
+	sdl->flags[1] = 0;
 }
 
 int				main(int argc, char **argv)
