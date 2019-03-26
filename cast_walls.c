@@ -6,7 +6,7 @@
 /*   By: bturcott <bturcott@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/20 20:42:36 by mbartole          #+#    #+#             */
-/*   Updated: 2019/03/26 14:28:43 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/03/26 17:47:46 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,23 +56,32 @@ static int		cur_row(int y, float ang) //TODO fix corners
 
 static float	get_dist_x(t_sdl *sbox, float ang, int *fl, int *x)
 {
-//	int	x;
 	int	next_r;
 	int	cur_c;
 	int xa;
 
-	*fl = 1;	
+//	*fl = 1;	
 	next_r = (QT_12(ang)) ? sbox->cam.y / BLOCK - 1 : sbox->cam.y / BLOCK + 1;
 	xa = ABS(BLOCK / tan((QT_14(ang)) ? ang : M_PI - ang));
 	*x = first_shift_x(ang, next_r, sbox->cam.x, sbox->cam.y);
 	cur_c = cur_column(*x, ang);
-	while (cur_c >= 0 && cur_c < MAP_W(sbox->map) && next_r >= 0 &&
-			next_r < MAP_H(sbox->map))
+	while (1)
 	{
+		if (cur_c >= MAP_W(sbox->map) || cur_c <= -1 || *x < 0 ||
+				next_r >= MAP_H(sbox->map) || next_r <= -1)
+		{
+			*fl = 0;
+			printf("S");
+//			printf("s[%d %d] ", *x, next_r);
+			return (sqrt(pow(sbox->cam.y - 
+				(QT_12(ang) ? next_r + 1 : next_r) * BLOCK, 2) + 
+				pow(sbox->cam.x - *x, 2)));
+		}
 		if (((t_point *)sbox->map->cont)[sbox->map->offset * next_r + cur_c].h)
 		{
-//			printf("x[%d %d] \n", *x, next_r);
-	//		*offset = x % BLOCK;
+			*fl = 1;
+			printf("X");
+//			printf("x[%d %d] ", *x, next_r);
 			return (sqrt(pow(sbox->cam.y -
 					(QT_12(ang) ? next_r + 1 : next_r) * BLOCK, 2) +
 						pow(sbox->cam.x - *x, 2)));
@@ -82,15 +91,15 @@ static float	get_dist_x(t_sdl *sbox, float ang, int *fl, int *x)
 		cur_c = cur_column(*x, ang);
 	}
 	*fl = 0;
-//	*offset = x % BLOCK;
-	return (sqrt(pow(sbox->cam.y - 
-		(QT_12(ang) ? next_r + 1 : next_r) * BLOCK, 2) + 
-				pow(sbox->cam.x - *x, 2)));
+	return (0.0);
+//	*fl = 0;
+//	return (sqrt(pow(sbox->cam.y - 
+//		(QT_12(ang) ? next_r + 1 : next_r) * BLOCK, 2) + 
+//				pow(sbox->cam.x - *x, 2)));
 }
 
 static float	get_dist_y(t_sdl *sbox, float ang, int *fl, int *y)
 {
-//	int	y;
 	int	cur_r;
 	int	next_c;
 	int ya;
@@ -101,14 +110,23 @@ static float	get_dist_y(t_sdl *sbox, float ang, int *fl, int *y)
 	*y = first_shift_y(ang, next_c, sbox->cam.x, sbox->cam.y);
 	cur_r = cur_row(*y, ang);
 //	printf("fsY %d nextC %d ", y, next_c);
-	while (next_c >= 0 && next_c < MAP_W(sbox->map) && cur_r >= 0 &&
-			cur_r < MAP_H(sbox->map))
+	while (1)
 	{
-//		printf("y[%d %d] ", next_c, y);
+		if (cur_r >= MAP_H(sbox->map) || cur_r <= -1 || *y < 0 || 
+				next_c >= MAP_W(sbox->map) || next_c <= -1)
+		{
+			*fl = 0;
+			printf("S");
+//			printf("s[%d %d] ", *x, next_r);
+			return (sqrt(pow(sbox->cam.x -
+					(QT_23(ang) ? next_c + 1 : next_c) * BLOCK, 2) +
+					 pow(sbox->cam.y - *y, 2)));
+		}
 		if (((t_point *)sbox->map->cont)[sbox->map->offset * cur_r + next_c].h)
 		{
+			*fl = 1;
+			printf("Y");
 //			printf("y[%d %d] \n", next_c, *y);
-	//		*offset = y % BLOCK;
 			return (sqrt(pow(sbox->cam.x -
 					(QT_23(ang) ? next_c + 1 : next_c) * BLOCK, 2) +
 					 pow(sbox->cam.y - *y, 2)));
@@ -118,10 +136,10 @@ static float	get_dist_y(t_sdl *sbox, float ang, int *fl, int *y)
 		cur_r = cur_row(*y, ang);
 	}
 	*fl = 0;
-//	*offset = y % BLOCK;
-	return (sqrt(pow(sbox->cam.x -
-					(QT_23(ang) ? next_c + 1 : next_c) * BLOCK, 2) +
-				pow(sbox->cam.y - *y, 2)));
+	return (0.0);
+//	return (sqrt(pow(sbox->cam.x -
+//					(QT_23(ang) ? next_c + 1 : next_c) * BLOCK, 2) +
+//				pow(sbox->cam.y - *y, 2)));
 }
 
 # define N 0x42F4AD
