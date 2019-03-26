@@ -6,7 +6,7 @@
 /*   By: bturcott <bturcott@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/20 20:42:36 by mbartole          #+#    #+#             */
-/*   Updated: 2019/03/26 19:21:01 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/03/26 19:22:50 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -214,10 +214,8 @@ void	cast_walls(t_sdl *sbox, unsigned int *map)
 		else
 		{
 			j = -1;
-		while (++j < WIN_H)
-		{
-			map[i + j * WIN_W] = just_color(ang, h, j, fl);
-		}
+			while (++j < WIN_H)
+				map[i + j * WIN_W] = just_color(ang, h, j, fl);
 		}
 		ang -= STEP;
 	}
