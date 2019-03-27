@@ -6,7 +6,7 @@
 /*   By: bturcott <bturcott@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/12/20 22:02:59 by mbartole          #+#    #+#             */
-/*   Updated: 2019/03/27 19:53:26 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/03/27 20:25:32 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,7 @@ typedef struct	s_sdl
 # define USAGE "./wolf [path_to_file_with_map]\n"
 
 # define MAP_DEFAULT "default.map"
+# define MAP(x) ((t_point *)((x)->cont))
 # define MAP_W(x) ((int)x->offset)
 # define MAP_H(x) ((int)(x->len / x->offset / sizeof(t_point)))
 

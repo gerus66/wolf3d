@@ -6,7 +6,7 @@
 /*   By: bturcott <bturcott@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/19 21:10:19 by bturcott          #+#    #+#             */
-/*   Updated: 2019/03/26 19:29:20 by bturcott         ###   ########.fr       */
+/*   Updated: 2019/03/27 22:14:26 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,25 +40,30 @@ static void		rotations(t_sdl *sdl, SDL_Event e)
 
 static void		movements(t_sdl *sdl, SDL_Event e)
 {
-	if (e.key.keysym.scancode == 26)
+	char	fl;
+	float	ang;
+	int		x;
+	int		y;
+
+	fl = 0;
+	if (e.key.keysym.scancode == 26 && (fl = 1))
+		ang = sdl->cam.angle;
+	else if (e.key.keysym.scancode == 22 && (fl = 1))
+		ang = sdl->cam.angle + M_PI;
+	else if (e.key.keysym.scancode == 4 && (fl = 1))
+		ang = sdl->cam.angle + M_PI * 0.5;
+	else if (e.key.keysym.scancode == 7 && (fl = 1))
+		ang = sdl->cam.angle + M_PI * 1.5;
+	if (fl)
 	{
-		sdl->cam.y -= MOV_STEP * round(sin(sdl->cam.angle) * 100) / 100;
-		sdl->cam.x += MOV_STEP * round(cos(sdl->cam.angle) * 100) / 100;
-	}
-	else if (e.key.keysym.scancode == 22)
-	{
-		sdl->cam.y -= MOV_STEP * round(sin(sdl->cam.angle + M_PI) * 100) / 100;
-		sdl->cam.x += MOV_STEP * round(cos(sdl->cam.angle + M_PI) * 100) / 100;
-	}
-	else if (e.key.keysym.scancode == 4)
-	{
-		sdl->cam.y += MOV_STEP * round(sin(sdl->cam.angle + M_PI * 3 / 2) * 100) / 100;
-		sdl->cam.x -= MOV_STEP * round(cos(sdl->cam.angle + M_PI * 3 / 2) * 100) / 100;
-	}
-	else if (e.key.keysym.scancode == 7)
-	{
-		sdl->cam.y += MOV_STEP * round(sin(sdl->cam.angle + M_PI / 2) * 100) / 100;
-		sdl->cam.x -= MOV_STEP * round(cos(sdl->cam.angle + M_PI / 2) * 100) / 100;
+		y = sdl->cam.y - (int)((float)MOV_STEP * sin(ang));
+		x = sdl->cam.x + (int)((float)MOV_STEP * cos(ang));
+		if (x <= 0 || y <= 0 || x >= MAP_W(sdl->map) * BLOCK ||
+				y >= MAP_H(sdl->map) * BLOCK ||
+				MAP(sdl->map)[MAP_W(sdl->map) * (y / BLOCK) + x / BLOCK].h)
+			return ;
+		sdl->cam.x = x;
+		sdl->cam.y = y;
 	}
 }
 
@@ -70,24 +75,24 @@ static void		sdl_loop(t_sdl *sdl)
 	{
 		if (SDL_PollEvent(&e))
 		{
-			printf("%d\n", e.key.keysym.scancode);
 			rotations(sdl, e);
-			movements(sdl, e);
-			if (e.key.keysym.scancode == 41 || e.quit.type == SDL_QUIT)
-				exit(clean_all(sdl, "exit on esc or red cross\n"));
-			else if (e.key.keysym.scancode == 16 && e.key.type == SDL_KEYDOWN
-					&& !sdl->flags[0])
-				sdl->flags[0] = 1;
-			else if (e.key.keysym.scancode == 16 && e.key.type == SDL_KEYDOWN
-					&& sdl->flags[0])
-				sdl->flags[0] = 0;
-			else if (e.key.keysym.scancode == 23 && e.key.type == SDL_KEYDOWN
-					&& !sdl->flags[1])
-				sdl->flags[1] = 1;
-			else if (e.key.keysym.scancode == 23 && e.key.type == SDL_KEYDOWN
-					&& sdl->flags[1])
-				sdl->flags[1] = 0;
-			printf("x-> %d y-> %d cos-> %f sin-> %f\n", sdl->cam.x, sdl->cam.y, cos(sdl->cam.angle), sin(sdl->cam.angle));
+			printf("%d\n", e.key.keysym.scancode);
+			if (e.key.type == SDL_KEYDOWN)
+			{
+				movements(sdl, e);
+				if (e.key.keysym.scancode == 41 || e.quit.type == SDL_QUIT)
+					exit(clean_all(sdl, "exit on esc or red cross\n"));
+				else if (e.key.keysym.scancode == 16 && !sdl->flags[0])
+					sdl->flags[0] = 1;
+				else if (e.key.keysym.scancode == 16 && sdl->flags[0])
+					sdl->flags[0] = 0;
+				else if (e.key.keysym.scancode == 23 && !sdl->flags[1])
+					sdl->flags[1] = 1;
+				else if (e.key.keysym.scancode == 23 && sdl->flags[1])
+					sdl->flags[1] = 0;
+				printf("x-> %d y-> %d cos-> %f sin-> %f\n", sdl->cam.x,
+					sdl->cam.y, cos(sdl->cam.angle), sin(sdl->cam.angle));
+			}
 			reprint_all(sdl);
 		}
 	}
