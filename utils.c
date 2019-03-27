@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: bturcott <bturcott@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/25 20:33:54 by mbartole          #+#    #+#             */
-/*   Updated: 2019/03/25 20:34:43 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/03/26 19:35:05 by bturcott         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,16 +31,16 @@ void		reprint_all(t_sdl *sdl)
 	int pitch;
 
 
+	
 	SDL_SetRenderTarget(sdl->render, sdl->plane);
-
+	SDL_RenderClear(sdl->render);
 	SDL_LockTexture(sdl->mapa, NULL, (void **)&mappix, &pitch);
 	SDL_LockTexture(sdl->text, NULL, (void **)&pixels, &pitch);
 	cast_walls(sdl, (unsigned int *)pixels);
 	SDL_UnlockTexture(sdl->text);
 	SDL_UnlockTexture(sdl->mapa);
 
-	SDL_RenderClear(sdl->render);
-	SDL_RenderCopy(sdl->render, sdl->text, 0, &(SDL_Rect){0, 0, WIN_W, WIN_H});
+	//SDL_RenderCopy(sdl->render, sdl->text, 0, &(SDL_Rect){0, 0, WIN_W, WIN_H});
 	if (sdl->flags[0])
 	{
 		draw_map(sdl, (unsigned int *)mappix);

@@ -6,7 +6,7 @@
 /*   By: bturcott <bturcott@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/19 21:10:19 by bturcott          #+#    #+#             */
-/*   Updated: 2019/03/26 14:25:52 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/03/26 19:29:20 by bturcott         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,6 +111,8 @@ static void		init_sdl(t_sdl *sdl)
 	if (!(sdl->mapa = SDL_CreateTexture(sdl->render, TXT_FORMAT, TXT_ACCESS,
 					sdl->map->offset, sdl->map->len / sdl->map->offset / 12)))
 		exit(clean_all(sdl, "Cant create the map\n"));
+	if (!(sdl->texture_pack = load_textures(sdl)))
+		ft_putendl("No Textures");
 	sdl->flags[0] = 0;
 	sdl->flags[1] = 0;
 }
