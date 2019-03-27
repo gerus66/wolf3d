@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   work_map.c                                         :+:      :+:    :+:   */
+/*   cast_walls.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bturcott <bturcott@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/20 20:42:36 by mbartole          #+#    #+#             */
-/*   Updated: 2019/03/26 19:22:50 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/03/27 16:09:53 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ static float	get_dist_x(t_sdl *sbox, float ang, int *fl, int *x)
 				next_r >= MAP_H(sbox->map) || next_r <= -1)
 		{
 			*fl = 0;
-			printf("S");
+//printf("S");
 //			printf("s[%d %d] ", *x, next_r);
 			return (sqrt(pow(sbox->cam.y - 
 				(QT_12(ang) ? next_r + 1 : next_r) * BLOCK, 2) + 
@@ -79,7 +79,7 @@ static float	get_dist_x(t_sdl *sbox, float ang, int *fl, int *x)
 		{
 			*fl = 1;
 //			printf("X");
-			printf("x[%d %d] ", *x, next_r);
+		//	printf("x[%d %d] ", *x, next_r);
 			return (sqrt(pow(sbox->cam.y -
 					(QT_12(ang) ? next_r + 1 : next_r) * BLOCK, 2) +
 						pow(sbox->cam.x - *x, 2)));
@@ -110,7 +110,7 @@ static float	get_dist_y(t_sdl *sbox, float ang, int *fl, int *y)
 				next_c >= MAP_W(sbox->map) || next_c <= -1)
 		{
 			*fl = 0;
-			printf("S");
+	//		printf("S");
 //			printf("s[%d %d] ", *x, next_r);
 			return (sqrt(pow(sbox->cam.x -
 					(QT_23(ang) ? next_c + 1 : next_c) * BLOCK, 2) +
@@ -120,7 +120,7 @@ static float	get_dist_y(t_sdl *sbox, float ang, int *fl, int *y)
 		{
 			*fl = 1;
 //			printf("Y");
-			printf("y[%d %d] ", next_c, *y);
+		//	printf("y[%d %d] ", next_c, *y);
 			return (sqrt(pow(sbox->cam.x -
 					(QT_23(ang) ? next_c + 1 : next_c) * BLOCK, 2) +
 					 pow(sbox->cam.y - *y, 2)));
@@ -192,12 +192,12 @@ void	cast_walls(t_sdl *sbox, unsigned int *map)
 			{
 				//		printf("Y!\n");
 				dist = ydist;
-				offset = yoffset;
+				// offset = yoffset;
 			}
 		}
 		else
 		{
-			printf("<%.1f VS %.1f > ", dist, ydist);
+		//	printf("<%.1f VS %.1f > ", dist, ydist);
 			fl = 'x';
 			if ((fly && ydist < dist) || !flx)
 			{
@@ -208,9 +208,12 @@ void	cast_walls(t_sdl *sbox, unsigned int *map)
 		}
 		dist *= cos(ang - sbox->cam.angle);
 		h = WALL_H * DIST / dist;
-		printf("/%d %c/ ", offset % BLOCK, fl);
-		if (sbox->flags[1])	
+		//printf("/%d %c/ ", offset % BLOCK, fl);
+		if (sbox->flags[1])
+		{
+		//	printf("angle %f h = %d x = %d offset = %d %c\n", ang, h, i, offset, fl);
 			paint_walls(sbox, ang, (int[]){h, i, offset % BLOCK}, fl);
+		}
 		else
 		{
 			j = -1;
