@@ -6,7 +6,7 @@
 /*   By: bturcott <bturcott@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/20 20:42:36 by mbartole          #+#    #+#             */
-/*   Updated: 2019/03/27 20:02:23 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/03/27 23:12:34 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ static float	get_dist_x(t_sdl *sbox, float ang, char *fl, int *offset)
 				(QT_12(ang) ? next_r + 1 : next_r) * BLOCK, 2) + 
 				pow(sbox->cam.x - x, 2)));
 		}
-		if (((t_point *)sbox->map->cont)[sbox->map->offset * next_r + cur_c].h)
+		if (MAP(sbox->map)[sbox->map->offset * next_r + cur_c].h)
 		{
 			*fl = 1;
 			*offset = (int)x;
@@ -96,7 +96,7 @@ static float	get_dist_y(t_sdl *sbox, float ang, char *fl, int *offset)
 					(QT_23(ang) ? next_c + 1 : next_c) * BLOCK, 2) +
 					 pow(sbox->cam.y - y, 2)));
 		}
-		if (((t_point *)sbox->map->cont)[sbox->map->offset * cur_r + next_c].h)
+		if (MAP(sbox->map)[sbox->map->offset * cur_r + next_c].h)
 		{
 			*fl = 1;
 			*offset = (int)y;
@@ -148,11 +148,11 @@ static float	get_height(t_sdl *sbox, float ang, int *offset, char *fl)
 # define SKY 0xA3F8FF
 # define FLOUR 0x9E9380
 
-static int      all_color(float ang, int h, int j, char fl)
+static int      all_color(float ang, int h, int j, int horiz, char fl)
 {
-	if (j >= WIN_H / 2 + h)
+	if (j >= horiz + h)
 		return (FLOUR);
-	if (j < WIN_H / 2 - h || (fl == 's' && j < WIN_H / 2 + h))
+	if (j < horiz - h || (fl == 's' && j < horiz + h))
 		return (SKY);
 	if ((fl == 'x' && QT_12(ang)))
 		return (N);
@@ -165,11 +165,11 @@ static int      all_color(float ang, int h, int j, char fl)
 	return (0xFFFFFF);
 }
 
-static int      just_sky(float ang, int h, int j, char fl)
+static int      just_sky(int h, int j, int horiz, char fl)
 {
-	if (j >= WIN_H / 2 + h)
+	if (j >= horiz + h)
 		return (FLOUR);
-	if (j < WIN_H / 2 - h || (fl == 's' && j < WIN_H / 2 + h))
+	if (j < horiz - h || (fl == 's' && j < horiz + h))
 		return (SKY);
 	return (0xFFFFFF);
 }
@@ -199,11 +199,12 @@ void	pixels_to_render(t_sdl *sbox, unsigned int *map)
 		else if (ang < -M_PI)
 			ang = 2 * M_PI + ang;
 		h = get_height(sbox, ang, &offset, &fl);
-		printf("/%d %c/ ", offset % BLOCK, fl);
+//		printf("/%d %c/ ", offset % BLOCK, fl);
 		j = -1;
 		while (++j < WIN_H)
 			map[i + j * WIN_W] = sbox->flags[1] ?
-				just_sky(ang, h, j, fl) : all_color(ang, h, j, fl);
+				just_sky(h, j, sbox->cam.horiz, fl) :
+				all_color(ang, h, j, sbox->cam.horiz, fl);
 		ang -= STEP;
 	}
 }
@@ -233,7 +234,7 @@ void	texts_to_render(t_sdl *sbox)
 		else if (ang < -M_PI)
 			ang = 2 * M_PI + ang;
 		h = get_height(sbox, ang, &offset, &fl);
-		printf("/%d %c/ ", offset % BLOCK, fl);
+//		printf("/%d %c/ ", offset % BLOCK, fl);
 		paint_walls(sbox, ang, (int[]){h, i, offset % BLOCK}, fl);
 		ang -= STEP;
 	}

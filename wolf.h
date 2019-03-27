@@ -6,7 +6,7 @@
 /*   By: bturcott <bturcott@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/12/20 22:02:59 by mbartole          #+#    #+#             */
-/*   Updated: 2019/03/27 20:25:32 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/03/27 22:48:01 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ typedef struct 	s_view
 {
 	int	x;
 	int	y;
+	int	horiz;
 	float	angle;
 }				t_view;
 

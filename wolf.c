@@ -6,7 +6,7 @@
 /*   By: bturcott <bturcott@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/19 21:10:19 by bturcott          #+#    #+#             */
-/*   Updated: 2019/03/27 22:14:26 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/03/27 23:12:31 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,13 @@
 
 static void		rotations(t_sdl *sdl, SDL_Event e)
 {
+	if (e.motion.type == SDL_MOUSEMOTION)
+	{
+		if (e.motion.yrel > 0 && sdl->cam.horiz > 5 * MOV_STEP)
+			sdl->cam.horiz -= MOV_STEP;
+		else if (e.motion.yrel < 0 && sdl->cam.horiz < WIN_H - 5 * MOV_STEP)
+			sdl->cam.horiz += MOV_STEP;
+	}
 	if (e.motion.type == SDL_MOUSEMOTION)
 	{
 		if (e.motion.xrel > 0)	
@@ -130,6 +137,7 @@ int				main(int argc, char **argv)
 	sdl.cam.x = 100;
 	sdl.cam.y = 300;
 	sdl.cam.angle = (float)M_PI / 2;
+	sdl.cam.horiz = WIN_H / 2;
 	printf("Distance to proj plane %d\n", (int)DIST);
 	printf("View point on [%d, %d, %d] angle %.1f\n",
 			sdl.cam.x, sdl.cam.y, CAM_H, sdl.cam.angle);
