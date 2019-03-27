@@ -6,7 +6,7 @@
 /*   By: bturcott <bturcott@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/25 20:33:54 by mbartole          #+#    #+#             */
-/*   Updated: 2019/03/26 19:35:05 by bturcott         ###   ########.fr       */
+/*   Updated: 2019/03/27 21:14:18 by bturcott         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,22 +32,22 @@ void		reprint_all(t_sdl *sdl)
 
 
 	
-	SDL_SetRenderTarget(sdl->render, sdl->plane);
+	SDL_SetRenderTarget(sdl->render, sdl->text);
 	SDL_RenderClear(sdl->render);
 	SDL_LockTexture(sdl->mapa, NULL, (void **)&mappix, &pitch);
 	SDL_LockTexture(sdl->text, NULL, (void **)&pixels, &pitch);
 	cast_walls(sdl, (unsigned int *)pixels);
 	SDL_UnlockTexture(sdl->text);
-	SDL_UnlockTexture(sdl->mapa);
 
-	//SDL_RenderCopy(sdl->render, sdl->text, 0, &(SDL_Rect){0, 0, WIN_W, WIN_H});
+	SDL_RenderCopy(sdl->render, sdl->text, 0, &(SDL_Rect){0, 0, WIN_W, WIN_H});
 	if (sdl->flags[0])
 	{
 		draw_map(sdl, (unsigned int *)mappix);
 		SDL_RenderCopy(sdl->render, sdl->mapa, 0, &(SDL_Rect){30, WIN_H / 3 * 2,
-				sdl->map->offset * WIN_W / 30 ,
-				sdl->map->len / sdl->map->offset / 12 * WIN_H / 30});
+				sdl->map->offset * 30,
+				MAP_H(sdl->map) * 30});
 	}
+	SDL_UnlockTexture(sdl->mapa);
 	SDL_SetRenderTarget(sdl->render, NULL);
 	SDL_RenderPresent(sdl->render);
 }

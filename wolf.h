@@ -6,7 +6,7 @@
 /*   By: bturcott <bturcott@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/12/20 22:02:59 by mbartole          #+#    #+#             */
-/*   Updated: 2019/03/26 14:02:07 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/03/27 16:20:10 by bturcott         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ typedef struct	s_sdl
 # define QT_23(x) ((x) >= M_PI / 2 || (x) <= -M_PI / 2)
 
 # define ROT_STEP M_PI / 128
-# define MOV_STEP BLOCK / 16
+# define MOV_STEP (float)BLOCK / 16
 
 /*
 ** utils

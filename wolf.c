@@ -6,7 +6,7 @@
 /*   By: bturcott <bturcott@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/19 21:10:19 by bturcott          #+#    #+#             */
-/*   Updated: 2019/03/26 19:29:20 by bturcott         ###   ########.fr       */
+/*   Updated: 2019/03/27 18:48:30 by bturcott         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,7 @@ static void		sdl_loop(t_sdl *sdl)
 			else if (e.key.keysym.scancode == 23 && e.key.type == SDL_KEYDOWN
 					&& sdl->flags[1])
 				sdl->flags[1] = 0;
-			printf("x-> %d y-> %d cos-> %f sin-> %f\n", sdl->cam.x, sdl->cam.y, cos(sdl->cam.angle), sin(sdl->cam.angle));
+		//	printf("x-> %d y-> %d cos-> %f sin-> %f\n", sdl->cam.x, sdl->cam.y, cos(sdl->cam.angle), sin(sdl->cam.angle));
 			reprint_all(sdl);
 		}
 	}
@@ -109,8 +109,9 @@ static void		init_sdl(t_sdl *sdl)
 					WIN_W, WIN_H)))
 		exit(clean_all(sdl, "Cant create the plane\n"));
 	if (!(sdl->mapa = SDL_CreateTexture(sdl->render, TXT_FORMAT, TXT_ACCESS,
-					sdl->map->offset, sdl->map->len / sdl->map->offset / 12)))
+					sdl->map->offset * 30, MAP_H(sdl->map) * 30)))
 		exit(clean_all(sdl, "Cant create the map\n"));
+		//printf("%zu %d\n", sdl->map->offset, MAP_H(sdl->map));
 	if (!(sdl->texture_pack = load_textures(sdl)))
 		ft_putendl("No Textures");
 	sdl->flags[0] = 0;
@@ -125,7 +126,7 @@ int				main(int argc, char **argv)
 	sdl.cam.x = 100;
 	sdl.cam.y = 300;
 	sdl.cam.angle = (float)M_PI / 2;
-	printf("Distance to proj plane %d\n", (int)DIST);
+	printf("Distance to proj plane %d\n", (int)DIST);	
 	printf("View point on [%d, %d, %d] angle %.1f\n",
 			sdl.cam.x, sdl.cam.y, CAM_H, sdl.cam.angle);
 	printf("Step at angle is %.5f radian\n", STEP);
