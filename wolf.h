@@ -6,7 +6,7 @@
 /*   By: bturcott <bturcott@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/12/20 22:02:59 by mbartole          #+#    #+#             */
-/*   Updated: 2019/03/26 14:02:07 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/03/27 19:53:26 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,7 +110,8 @@ void    draw_map(t_sdl *sdl, unsigned int *map);
 ** casting of walls
 */
 
-void    cast_walls(t_sdl *sbox, unsigned int *map);
+void    pixels_to_render(t_sdl *sbox, unsigned int *map);
+void    texts_to_render(t_sdl *sbox);
 
 /*
 ** painting of walls
