@@ -6,7 +6,7 @@
 /*   By: bturcott <bturcott@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/25 20:31:26 by mbartole          #+#    #+#             */
-/*   Updated: 2019/03/27 21:11:54 by bturcott         ###   ########.fr       */
+/*   Updated: 2019/03/28 12:18:13 by bturcott         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ void draw_a_block(int *coords, t_sdl *sdl, unsigned int *map, char type)
 	}
 	}
 	else
-		draw_a_char((int[]){sdl->cam.y, sdl->cam.x}, sdl, map);
+		draw_a_char((int[]){sdl->cam.y * MAP_H(sdl->map) * 30 / WIN_H, sdl->cam.x * MAP_W(sdl->map) * 30 / WIN_W}, sdl, map);
 	
 }
 
