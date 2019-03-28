@@ -6,7 +6,7 @@
 /*   By: bturcott <bturcott@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/25 19:57:27 by mbartole          #+#    #+#             */
-/*   Updated: 2019/03/27 17:32:45 by bturcott         ###   ########.fr       */
+/*   Updated: 2019/03/28 12:26:24 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ int select_texture(float ang, char fl)
 		return (2);
 	if ((fl == 'y' && QT_14(ang)))
 		return (3);
+	return (-1);
 }
 
 void		paint_walls(t_sdl *sdl, float ang, int *params, char side)
@@ -48,16 +49,19 @@ void		paint_walls(t_sdl *sdl, float ang, int *params, char side)
 	//printf("%d\n", offset);
 	SDL_Rect texture;
 	SDL_Rect object;
-	int vert_unit;
+	int i;
 	//printf("angle %f h = %d x = %d offset = %d %c\n", ang, params[0], params[1], params[2], side);
-	if ((int)((int)ang / (STEP * 400)) % 100 == 0)
-		printf("%f, %c\n", ang, side);
+//	if ((int)((int)ang / (STEP * 400)) % 100 == 0)
+//		printf("%f, %c\n", ang, side);
 	
-	texture.h = WIN_H / 2 + params[0];
+	i = select_texture(ang, side);
+	if (i == -1)
+		return ;
+	texture.h = 2 * params[0];
 	texture.w = 2;
 	texture.x = params[1];
-	texture.y = WIN_H / 2 - params[0];
-	convert_texture(sdl->texture_pack[select_texture(ang, side)], texture, &object, params[2]);
+	texture.y = sdl->cam.horiz - params[0];
+	convert_texture(sdl->texture_pack[i], texture, &object, params[2]);
 	
 		SDL_RenderCopy(sdl->render, sdl->texture_pack[select_texture(ang, side)], &object, &texture);
 		

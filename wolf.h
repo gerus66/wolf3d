@@ -6,7 +6,7 @@
 /*   By: bturcott <bturcott@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/12/20 22:02:59 by mbartole          #+#    #+#             */
-/*   Updated: 2019/03/27 16:20:10 by bturcott         ###   ########.fr       */
+/*   Updated: 2019/03/28 12:22:53 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ typedef struct 	s_view
 {
 	int	x;
 	int	y;
+	int	horiz;
 	float	angle;
 }				t_view;
 
@@ -54,6 +55,7 @@ typedef struct	s_sdl
 # define USAGE "./wolf [path_to_file_with_map]\n"
 
 # define MAP_DEFAULT "default.map"
+# define MAP(x) ((t_point *)((x)->cont))
 # define MAP_W(x) ((int)x->offset)
 # define MAP_H(x) ((int)(x->len / x->offset / sizeof(t_point)))
 
@@ -110,7 +112,8 @@ void    draw_map(t_sdl *sdl, unsigned int *map);
 ** casting of walls
 */
 
-void    cast_walls(t_sdl *sbox, unsigned int *map);
+void    pixels_to_render(t_sdl *sbox, unsigned int *map);
+void    texts_to_render(t_sdl *sbox);
 
 /*
 ** painting of walls
