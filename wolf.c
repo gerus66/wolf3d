@@ -6,7 +6,7 @@
 /*   By: bturcott <bturcott@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/19 21:10:19 by bturcott          #+#    #+#             */
-/*   Updated: 2019/03/27 23:12:31 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/03/28 13:26:46 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,16 +16,16 @@ static void		rotations(t_sdl *sdl, SDL_Event e)
 {
 	if (e.motion.type == SDL_MOUSEMOTION)
 	{
-		if (e.motion.yrel > 0 && sdl->cam.horiz > 5 * MOV_STEP)
+		if (e.motion.yrel > 1 && sdl->cam.horiz > 5 * MOV_STEP)
 			sdl->cam.horiz -= MOV_STEP;
-		else if (e.motion.yrel < 0 && sdl->cam.horiz < WIN_H - 5 * MOV_STEP)
+		else if (e.motion.yrel < -1 && sdl->cam.horiz < WIN_H - 5 * MOV_STEP)
 			sdl->cam.horiz += MOV_STEP;
 	}
 	if (e.motion.type == SDL_MOUSEMOTION)
 	{
-		if (e.motion.xrel > 0)	
+		if (e.motion.xrel > 1)	
 			sdl->cam.angle -= ROT_STEP;
-		else if (e.motion.xrel < 0)
+		else if (e.motion.xrel < -1)
 			sdl->cam.angle += ROT_STEP;
 		if (sdl->cam.angle > M_PI)
 			sdl->cam.angle -= 2 * M_PI;
