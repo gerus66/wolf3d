@@ -6,7 +6,7 @@
 /*   By: bturcott <bturcott@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/25 20:33:54 by mbartole          #+#    #+#             */
-/*   Updated: 2019/03/27 19:53:05 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/03/28 16:23:49 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,9 +45,9 @@ void		reprint_all(t_sdl *sdl)
 		SDL_LockTexture(sdl->mapa, NULL, (void **)&mappix, &pitch);
 		draw_map(sdl, (unsigned int *)mappix);
 		SDL_UnlockTexture(sdl->mapa);
-		SDL_RenderCopy(sdl->render, sdl->mapa, 0, &(SDL_Rect){30, WIN_H / 3 * 2,
-				sdl->map->offset * WIN_W / 30 ,
-				sdl->map->len / sdl->map->offset / 12 * WIN_H / 30});
+		SDL_RenderCopy(sdl->render, sdl->mapa, 0, &(SDL_Rect){30, WIN_H - MAP_H(sdl->map) * 30,
+				sdl->map->offset * 30 ,
+				MAP_H(sdl->map) * 30});
 	}
 	//	SDL_SetRenderTarget(sdl->render, NULL);
 	SDL_RenderPresent(sdl->render);

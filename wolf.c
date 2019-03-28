@@ -6,7 +6,7 @@
 /*   By: bturcott <bturcott@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/19 21:10:19 by bturcott          #+#    #+#             */
-/*   Updated: 2019/03/28 13:26:46 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/03/28 16:13:52 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,32 +45,55 @@ static void		rotations(t_sdl *sdl, SDL_Event e)
 	}
 }
 
-static void		movements(t_sdl *sdl, SDL_Event e)
+static void		movements(t_sdl *sdl, int key, float ang)
 {
 	char	fl;
-	float	ang;
+	char	yfl;
+	char	xfl;
 	int		x;
 	int		y;
 
 	fl = 0;
-	if (e.key.keysym.scancode == 26 && (fl = 1))
-		ang = sdl->cam.angle;
-	else if (e.key.keysym.scancode == 22 && (fl = 1))
-		ang = sdl->cam.angle + M_PI;
-	else if (e.key.keysym.scancode == 4 && (fl = 1))
-		ang = sdl->cam.angle + M_PI * 0.5;
-	else if (e.key.keysym.scancode == 7 && (fl = 1))
-		ang = sdl->cam.angle + M_PI * 1.5;
+	xfl = 1;
+	yfl = 1;
+	if (key == 26 && (fl = 1))
+		;
+	else if (key == 22 && (fl = 1))
+		ang += M_PI;
+	else if (key == 4 && (fl = 1))
+		ang += M_PI * 0.5;
+	else if (key == 7 && (fl = 1))
+		ang += M_PI * 1.5;
 	if (fl)
 	{
-		y = sdl->cam.y - (int)((float)MOV_STEP * sin(ang));
-		x = sdl->cam.x + (int)((float)MOV_STEP * cos(ang));
-		if (x <= 0 || y <= 0 || x >= MAP_W(sdl->map) * BLOCK ||
-				y >= MAP_H(sdl->map) * BLOCK ||
-				MAP(sdl->map)[MAP_W(sdl->map) * (y / BLOCK) + x / BLOCK].h)
+		y = sdl->cam.y - (int)((float)MOV_STEP * 2.0 * sin(ang));
+		x = sdl->cam.x + (int)((float)MOV_STEP * 2.0 * cos(ang));
+		if (x <= 0 || x >= MAP_W(sdl->map) * BLOCK ||
+				MAP(sdl->map)[MAP_W(sdl->map) * (sdl->cam.y / BLOCK) + x / BLOCK].h)
+			xfl = 0;
+		if (y <= 0 || y >= MAP_H(sdl->map) * BLOCK ||
+				MAP(sdl->map)[MAP_W(sdl->map) * (y / BLOCK) + sdl->cam.x / BLOCK].h)
+			yfl = 0;
+		if (xfl && yfl)
+		{
+			sdl->cam.x += (int)((float)MOV_STEP * cos(ang));
+			sdl->cam.y -= (int)((float)MOV_STEP * sin(ang));
 			return ;
-		sdl->cam.x = x;
-		sdl->cam.y = y;
+		}
+/*		if (!yfl && xfl)
+		{
+		//	movements(sdl, key, )
+		//	sdl->cam.x = signbit(cos(ang)) ? sdl->cam.x - MOV_STEP :
+		//									sdl->cam.x + MOV_STEP;
+			return ;
+		}
+		if (!xfl && yfl)
+		{
+			sdl->cam.y = signbit(sin(ang)) ? sdl->cam.y + MOV_STEP :
+											sdl->cam.y - MOV_STEP;
+			return ;
+		}
+		movements(sdl, key, ang - M_PI / 2);*/
 	}
 }
 
@@ -86,7 +109,7 @@ static void		sdl_loop(t_sdl *sdl)
 			printf("%d\n", e.key.keysym.scancode);
 			if (e.key.type == SDL_KEYDOWN)
 			{
-				movements(sdl, e);
+				movements(sdl, e.key.keysym.scancode, sdl->cam.angle);
 				if (e.key.keysym.scancode == 41 || e.quit.type == SDL_QUIT)
 					exit(clean_all(sdl, "exit on esc or red cross\n"));
 				else if (e.key.keysym.scancode == 16 && !sdl->flags[0])
@@ -121,7 +144,8 @@ static void		init_sdl(t_sdl *sdl)
 					WIN_W, WIN_H)))
 		exit(clean_all(sdl, "Cant create the plane\n"));
 	if (!(sdl->mapa = SDL_CreateTexture(sdl->render, TXT_FORMAT, TXT_ACCESS,
-					sdl->map->offset, sdl->map->len / sdl->map->offset / 12)))
+					sdl->map->offset * 30, MAP_H(sdl->map) * 30)))
+			//		sdl->map->offset, sdl->map->len / sdl->map->offset / 12)))
 		exit(clean_all(sdl, "Cant create the map\n"));
 	if (!(sdl->texture_pack = load_textures(sdl)))
 		ft_putendl("No Textures");
