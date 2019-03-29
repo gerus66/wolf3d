@@ -6,7 +6,7 @@
 /*   By: bturcott <bturcott@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/12/20 22:02:59 by mbartole          #+#    #+#             */
-/*   Updated: 2019/03/27 22:48:01 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/03/29 21:40:33 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,11 @@ typedef struct	s_sdl
 	t_view			cam;
 	SDL_Texture		**texture_pack;
 }				t_sdl;
+
+# define UP 26
+# define RIGHT 7
+# define DOWN 22
+# define LEFT 4
 
 # define USAGE "./wolf [path_to_file_with_map]\n"
 
