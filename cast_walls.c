@@ -6,11 +6,18 @@
 /*   By: bturcott <bturcott@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/20 20:42:36 by mbartole          #+#    #+#             */
-/*   Updated: 2019/03/27 23:12:34 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/03/29 19:01:23 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "wolf.h"
+
+#define N 0x42F4AD
+#define E 0x8A6DA3
+#define W 0xBD76F7
+#define S 0xF44262
+#define SKY 0xA3F8FF
+#define FLOUR 0x9E9380
 
 static float	first_shift_x(float ang, int bound, int x, int y)
 {
@@ -37,10 +44,10 @@ static float	first_shift_y(float ang, int bound, int x, int y)
 
 static float	get_dist_x(t_sdl *sbox, float ang, char *fl, int *offset)
 {
-	int	next_r;
-	int	cur_c;
-	float xa;
-	float x;
+	int		next_r;
+	int		cur_c;
+	float	xa;
+	float	x;
 
 	next_r = (QT_12(ang)) ? sbox->cam.y / BLOCK - 1 : sbox->cam.y / BLOCK + 1;
 	xa = fabs(BLOCK / tan((QT_14(ang)) ? ang : M_PI - ang));
@@ -53,8 +60,8 @@ static float	get_dist_x(t_sdl *sbox, float ang, char *fl, int *offset)
 		{
 			*fl = 0;
 			*offset = (int)x;
-			return (sqrt(pow(sbox->cam.y - 
-				(QT_12(ang) ? next_r + 1 : next_r) * BLOCK, 2) + 
+			return (sqrt(pow(sbox->cam.y -
+				(QT_12(ang) ? next_r + 1 : next_r) * BLOCK, 2) +
 				pow(sbox->cam.x - x, 2)));
 		}
 		if (MAP(sbox->map)[sbox->map->offset * next_r + cur_c].h)
@@ -76,25 +83,25 @@ static float	get_dist_x(t_sdl *sbox, float ang, char *fl, int *offset)
 
 static float	get_dist_y(t_sdl *sbox, float ang, char *fl, int *offset)
 {
-	int	cur_r;
-	int	next_c;
-	float ya;
-	float y;
-	
+	int		cur_r;
+	int		next_c;
+	float	ya;
+	float	y;
+
 	next_c = (QT_14(ang)) ? sbox->cam.x / BLOCK + 1 : sbox->cam.x / BLOCK - 1;
 	ya = fabs(BLOCK * tan((QT_14(ang)) ? ang : M_PI - ang));
 	y = first_shift_y(ang, next_c, sbox->cam.x, sbox->cam.y);
 	cur_r = (int)y / BLOCK;
 	while (1)
 	{
-		if (cur_r >= MAP_H(sbox->map) || y < 0 || 
+		if (cur_r >= MAP_H(sbox->map) || y < 0 ||
 				next_c >= MAP_W(sbox->map) || next_c <= -1)
 		{
 			*fl = 0;
 			*offset = (int)y;
 			return (sqrt(pow(sbox->cam.x -
 					(QT_23(ang) ? next_c + 1 : next_c) * BLOCK, 2) +
-					 pow(sbox->cam.y - y, 2)));
+					pow(sbox->cam.y - y, 2)));
 		}
 		if (MAP(sbox->map)[sbox->map->offset * cur_r + next_c].h)
 		{
@@ -102,7 +109,7 @@ static float	get_dist_y(t_sdl *sbox, float ang, char *fl, int *offset)
 			*offset = (int)y;
 			return (sqrt(pow(sbox->cam.x -
 					(QT_23(ang) ? next_c + 1 : next_c) * BLOCK, 2) +
-					 pow(sbox->cam.y - y, 2)));
+					pow(sbox->cam.y - y, 2)));
 		}
 		next_c = QT_14(ang) ? next_c + 1 : next_c - 1;
 		y = QT_12(ang) ? y - ya : y + ya;
@@ -122,7 +129,7 @@ static float	get_height(t_sdl *sbox, float ang, int *offset, char *fl)
 
 	dist = get_dist_x(sbox, ang, fl, offset);
 	disty = get_dist_y(sbox, ang, &ya_fl, &ya_offset);
-	if (!(*fl) && !ya_fl && (*fl = 's')) // no walls
+	if (!(*fl) && !ya_fl && (*fl = 's'))
 		return (WALL_H * DIST / (disty < dist ? disty : dist)
 				/ cos(ang - sbox->cam.angle));
 	else
@@ -141,14 +148,7 @@ static float	get_height(t_sdl *sbox, float ang, int *offset, char *fl)
 	}
 }
 
-# define N 0x42F4AD
-# define E 0x8A6DA3
-# define W 0xBD76F7
-# define S 0xF44262
-# define SKY 0xA3F8FF
-# define FLOUR 0x9E9380
-
-static int      all_color(float ang, int h, int j, int horiz, char fl)
+static int		all_color(float ang, int h, int j, int horiz, char fl)
 {
 	if (j >= horiz + h)
 		return (FLOUR);
@@ -165,7 +165,7 @@ static int      all_color(float ang, int h, int j, int horiz, char fl)
 	return (0xFFFFFF);
 }
 
-static int      just_sky(int h, int j, int horiz, char fl)
+static int		just_sky(int h, int j, int horiz, char fl)
 {
 	if (j >= horiz + h)
 		return (FLOUR);
@@ -174,7 +174,7 @@ static int      just_sky(int h, int j, int horiz, char fl)
 	return (0xFFFFFF);
 }
 
-void	pixels_to_render(t_sdl *sbox, unsigned int *map)
+void			pixels_to_render(t_sdl *sbox, unsigned int *map)
 {
 	int		i;
 	int		j;
@@ -183,11 +183,10 @@ void	pixels_to_render(t_sdl *sbox, unsigned int *map)
 	char	fl;
 	int		offset;
 
-
 	printf("map %d x %d \n", MAP_W(sbox->map), MAP_H(sbox->map));
 	printf("I m in [%d %d] looking at %d grad ", sbox->cam.x / BLOCK,
 			sbox->cam.y / BLOCK, (int)(sbox->cam.angle / M_PI * 180));
-	printf("(from %d to %d grad)\n", 
+	printf("(from %d to %d grad)\n",
 			(int)((sbox->cam.angle - FOV / 2) / M_PI * 180),
 			(int)((sbox->cam.angle + FOV / 2) / M_PI * 180));
 	ang = sbox->cam.angle + FOV / 2;
@@ -199,7 +198,6 @@ void	pixels_to_render(t_sdl *sbox, unsigned int *map)
 		else if (ang < -M_PI)
 			ang = 2 * M_PI + ang;
 		h = get_height(sbox, ang, &offset, &fl);
-//		printf("/%d %c/ ", offset % BLOCK, fl);
 		j = -1;
 		while (++j < WIN_H)
 			map[i + j * WIN_W] = sbox->flags[1] ?
@@ -209,7 +207,7 @@ void	pixels_to_render(t_sdl *sbox, unsigned int *map)
 	}
 }
 
-void	texts_to_render(t_sdl *sbox)
+void			texts_to_render(t_sdl *sbox)
 {
 	int		i;
 	int		j;
@@ -218,11 +216,10 @@ void	texts_to_render(t_sdl *sbox)
 	char	fl;
 	int		offset;
 
-
 	printf("map %d x %d \n", MAP_W(sbox->map), MAP_H(sbox->map));
 	printf("I m in [%d %d] looking at %d grad ", sbox->cam.x / BLOCK,
 			sbox->cam.y / BLOCK, (int)(sbox->cam.angle / M_PI * 180));
-	printf("(from %d to %d grad)\n", 
+	printf("(from %d to %d grad)\n",
 			(int)((sbox->cam.angle - FOV / 2) / M_PI * 180),
 			(int)((sbox->cam.angle + FOV / 2) / M_PI * 180));
 	ang = sbox->cam.angle + FOV / 2;
@@ -234,7 +231,6 @@ void	texts_to_render(t_sdl *sbox)
 		else if (ang < -M_PI)
 			ang = 2 * M_PI + ang;
 		h = get_height(sbox, ang, &offset, &fl);
-//		printf("/%d %c/ ", offset % BLOCK, fl);
 		paint_walls(sbox, ang, (int[]){h, i, offset % BLOCK}, fl);
 		ang -= STEP;
 	}
