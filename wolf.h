@@ -6,7 +6,7 @@
 /*   By: bturcott <bturcott@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/12/20 22:02:59 by mbartole          #+#    #+#             */
-/*   Updated: 2019/03/29 21:40:33 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/03/31 21:47:51 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,16 +25,16 @@ typedef struct	s_point
 	int	h;
 }				t_point;
 
-typedef struct 	s_view
+typedef struct	s_view
 {
-	int	x;
-	int	y;
-	int	horiz;
+	int		x;
+	int		y;
+	int		horiz;
 	float	angle;
 }				t_view;
 
 /*
-** flags: 0 - show mini-map; 
+** flags: 0 - show mini-map;
 **		  1 - swith on texture on walls
 */
 
@@ -63,7 +63,6 @@ typedef struct	s_sdl
 # define MAP(x) ((t_point *)((x)->cont))
 # define MAP_W(x) ((int)x->offset)
 # define MAP_H(x) ((int)(x->len / x->offset / sizeof(t_point)))
-
 
 # define NAME "Wolf3D"
 # define WIN_POS_X 1000
@@ -98,33 +97,33 @@ typedef struct	s_sdl
 ** utils
 */
 
-int     		clean_all(t_sdl *sdl, char *msg);
+int				clean_all(t_sdl *sdl, char *msg);
 void			reprint_all(t_sdl *sdl);
 
 /*
 ** read map from file
 */
 
-void            read_map(t_sdl *sbox, int fd);
+void			read_map(t_sdl *sbox, int fd);
 
 /*
 ** create mini-map
 */
 
-void    draw_map(t_sdl *sdl, unsigned int *map);
+void			draw_map(t_sdl *sdl, unsigned int *map);
 
 /*
 ** casting of walls
 */
 
-void    pixels_to_render(t_sdl *sbox, unsigned int *map);
-void    texts_to_render(t_sdl *sbox);
+void			pixels_to_render(t_sdl *sbox, unsigned int *map, float ang);
+void			texts_to_render(t_sdl *sbox, float ang);
 
 /*
 ** painting of walls
 */
 
-SDL_Texture             **load_textures(t_sdl *sdl);
-void					paint_walls(t_sdl *sdl, float ang, int *params, char side);
+SDL_Texture		**load_textures(t_sdl *sdl);
+void			paint_walls(t_sdl *sdl, float ang, int *params, char side);
 
 #endif
