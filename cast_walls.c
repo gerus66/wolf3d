@@ -6,7 +6,7 @@
 /*   By: bturcott <bturcott@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/20 20:42:36 by mbartole          #+#    #+#             */
-/*   Updated: 2019/04/19 16:05:29 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/04/19 22:30:12 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,11 +150,38 @@ static int		all_color(float ang, int *param, char fl)
 	return (0xFFFFFF);
 }
 
-static int		just_sky(int h, int j, int horiz, char fl)
+static void		get_floor_offset(t_sdl *sbox, float ang, int *off_x, int *off_y)
 {
-	if (j >= horiz + h)
-		return (FLOOR);
-	if (j < horiz - h || (fl == 's' && j < horiz + h))
+	float	dist;
+
+	dist = - CAM_H * DIST / (*off_y - WIN_H / 2);
+	*off_y = ((int)dist - sbox->cam.y % BLOCK) % BLOCK; 
+	*off_x = ((int)(dist * tan(ang - sbox->cam.angle)) -
+			sbox->cam.x % BLOCK) % BLOCK;
+}
+
+/*
+** params[0] - h (height of wall)
+**       [1] - j (current y coord)
+**       [2] - fl ('s' for just sky)
+*/
+
+static int		just_sky(t_sdl *sbox, int *param, float ang)
+{
+	int	off_x;
+	int	off_y;
+	Uint32 *p;
+
+	if (param[1] >= sbox->cam.horiz + param[0] )
+	{
+		off_y = param[1];
+		get_floor_offset(sbox, ang, &off_x, &off_y);
+		p = (Uint32 *)(sbox->floor->pixels);
+	//	printf("%d ", off_y * sbox->floor->w + off_x);
+		return (p[off_y * sbox->floor->w + off_x]);
+	}
+	if (param[1] < sbox->cam.horiz - param[0] ||
+			(param[2] == 's' && param[1] < sbox->cam.horiz + param[0]))
 		return (SKY);
 	return (0xFFFFFF);
 }
@@ -186,7 +213,7 @@ void			pixels_to_render(t_sdl *sbox, unsigned int *map, float ang)
 		j = -1;
 		while (++j < WIN_H)
 			map[i + j * WIN_W] = sbox->flags[1] ?
-				just_sky(h, j, sbox->cam.horiz, fl) :
+				just_sky(sbox, (int[]){h, j, fl}, ang) :
 				all_color(ang, (int[]){h, j, sbox->cam.horiz}, fl);
 		ang -= STEP;
 	}
@@ -208,7 +235,7 @@ static int select_text(float ang, char fl)
 void			texts_to_render(t_sdl *sbox, float ang)
 {
 	int		i;
-//	int		j;
+	int		j;
 	int		h;
 	char	fl;
 	int		offset;
@@ -230,12 +257,6 @@ void			texts_to_render(t_sdl *sbox, float ang)
 		offset = 0;
 		h = get_height(sbox, ang, &offset, &fl);
 		paint_walls(sbox, (int[]){h, i, offset % BLOCK, select_text(ang, fl)});
-//		j = sbox->cam.horiz + h - 1;
-//		while (++j < WIN_H)
-//		{
-//			get_offset(sbox, ang, &h, &offset);
-//			paint_floor(sbox, h, offset);
-//		}
 		ang -= STEP;
 	}
 }

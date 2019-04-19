@@ -6,7 +6,7 @@
 /*   By: bturcott <bturcott@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/25 19:57:27 by mbartole          #+#    #+#             */
-/*   Updated: 2019/04/19 16:08:54 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/04/19 16:58:16 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,3 +45,26 @@ void			paint_walls(t_sdl *sdl, int *params)
 	SDL_RenderCopy(sdl->render, sdl->texture_pack[params[3]], &object,
 			&texture);		
 }
+
+/*
+** params[0] - x (coord of pixel in window)
+**       [1] - y (coord of pixel in window)
+**       [2] - offset_x (coord of pixel in texture)
+**       [3] - offset_y (coord of pixel in texture)
+*/
+/*
+void			paint_floor(t_sdl *sdl, int *params)
+{
+	SDL_Rect texture;
+	SDL_Rect object;
+	
+//	if (params[3] == -1)
+//		return ;
+	texture.h = 2;
+	texture.w = 2;
+	texture.x = params[0];
+	texture.y = params[1];
+	convert_texture(sdl->texture_pack[1], texture, &object, params[2]);
+	SDL_RenderCopy(sdl->render, sdl->texture_pack[params[3]], &object,
+			&texture);		
+}*/

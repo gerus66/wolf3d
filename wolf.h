@@ -6,7 +6,7 @@
 /*   By: bturcott <bturcott@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/12/20 22:02:59 by mbartole          #+#    #+#             */
-/*   Updated: 2019/04/19 16:05:47 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/04/19 18:47:01 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,7 @@ typedef struct	s_sdl
 	int				mouse_pos[2];
 	t_vector		*map;
 	t_view			cam;
+	SDL_Surface		*floor;
 	SDL_Texture		**texture_pack;
 }				t_sdl;
 
