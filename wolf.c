@@ -6,7 +6,7 @@
 /*   By: bturcott <bturcott@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/19 21:10:19 by bturcott          #+#    #+#             */
-/*   Updated: 2019/03/28 16:13:52 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/03/31 19:03:49 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,13 +56,13 @@ static void		movements(t_sdl *sdl, int key, float ang)
 	fl = 0;
 	xfl = 1;
 	yfl = 1;
-	if (key == 26 && (fl = 1))
+	if (key == UP && (fl = 1))
 		;
-	else if (key == 22 && (fl = 1))
+	else if (key == DOWN && (fl = 1))
 		ang += M_PI;
-	else if (key == 4 && (fl = 1))
+	else if (key == LEFT && (fl = 1))
 		ang += M_PI * 0.5;
-	else if (key == 7 && (fl = 1))
+	else if (key == RIGHT && (fl = 1))
 		ang += M_PI * 1.5;
 	if (fl)
 	{
@@ -80,20 +80,18 @@ static void		movements(t_sdl *sdl, int key, float ang)
 			sdl->cam.y -= (int)((float)MOV_STEP * sin(ang));
 			return ;
 		}
-/*		if (!yfl && xfl)
+		if (!yfl)
 		{
-		//	movements(sdl, key, )
-		//	sdl->cam.x = signbit(cos(ang)) ? sdl->cam.x - MOV_STEP :
-		//									sdl->cam.x + MOV_STEP;
+			printf("angle to wall %d\n",
+				(int)(atan((float)(y - sdl->cam.y) / (float)(x - sdl->cam.x)) / M_PI * 180));
+	//		if (x - sdl->cam.x > 0)
+	//			movements(sdl, key,
+	//				ang + fabs(atan2(y - sdl->cam.y, x - sdl->cam.x)));
+	//		else
+	//			movements(sdl, key,
+	//				ang - fabs(atan2(y - sdl->cam.y, x - sdl->cam.x)));
 			return ;
 		}
-		if (!xfl && yfl)
-		{
-			sdl->cam.y = signbit(sin(ang)) ? sdl->cam.y + MOV_STEP :
-											sdl->cam.y - MOV_STEP;
-			return ;
-		}
-		movements(sdl, key, ang - M_PI / 2);*/
 	}
 }
 
@@ -106,7 +104,7 @@ static void		sdl_loop(t_sdl *sdl)
 		if (SDL_PollEvent(&e))
 		{
 			rotations(sdl, e);
-			printf("%d\n", e.key.keysym.scancode);
+			printf("KEY %d\n", e.key.keysym.scancode);
 			if (e.key.type == SDL_KEYDOWN)
 			{
 				movements(sdl, e.key.keysym.scancode, sdl->cam.angle);

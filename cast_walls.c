@@ -6,7 +6,7 @@
 /*   By: bturcott <bturcott@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/20 20:42:36 by mbartole          #+#    #+#             */
-/*   Updated: 2019/03/31 21:17:58 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/04/19 16:05:29 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 #define W 0xBD76F7
 #define S 0xF44262
 #define SKY 0xA3F8FF
-#define FLOUR 0x9E9380
+#define FLOOR 0x9E9380
 
 static float	first_shift_x(float ang, int bound, int x, int y)
 {
@@ -135,7 +135,7 @@ static float	get_height(t_sdl *sbox, float ang, int *offset, char *fl)
 static int		all_color(float ang, int *param, char fl)
 {
 	if (param[1] >= param[2] + param[0])
-		return (FLOUR);
+		return (FLOOR);
 	if (param[1] < param[2] - param[0] ||
 		(fl == 's' && param[1] < param[2] + param[0]))
 		return (SKY);
@@ -153,7 +153,7 @@ static int		all_color(float ang, int *param, char fl)
 static int		just_sky(int h, int j, int horiz, char fl)
 {
 	if (j >= horiz + h)
-		return (FLOUR);
+		return (FLOOR);
 	if (j < horiz - h || (fl == 's' && j < horiz + h))
 		return (SKY);
 	return (0xFFFFFF);
@@ -192,10 +192,23 @@ void			pixels_to_render(t_sdl *sbox, unsigned int *map, float ang)
 	}
 }
 
+static int select_text(float ang, char fl)
+{
+	if ((fl == 'x' && QT_12(ang)))
+		return (0);
+	if ((fl == 'x' && QT_34(ang)))
+		return (1);
+	if ((fl == 'y' && QT_23(ang)))
+		return (2);
+	if ((fl == 'y' && QT_14(ang)))
+		return (3);
+	return (-1);
+}
+
 void			texts_to_render(t_sdl *sbox, float ang)
 {
 	int		i;
-	int		j;
+//	int		j;
 	int		h;
 	char	fl;
 	int		offset;
@@ -216,7 +229,13 @@ void			texts_to_render(t_sdl *sbox, float ang)
 		fl = 0;
 		offset = 0;
 		h = get_height(sbox, ang, &offset, &fl);
-		paint_walls(sbox, ang, (int[]){h, i, offset % BLOCK}, fl);
+		paint_walls(sbox, (int[]){h, i, offset % BLOCK, select_text(ang, fl)});
+//		j = sbox->cam.horiz + h - 1;
+//		while (++j < WIN_H)
+//		{
+//			get_offset(sbox, ang, &h, &offset);
+//			paint_floor(sbox, h, offset);
+//		}
 		ang -= STEP;
 	}
 }

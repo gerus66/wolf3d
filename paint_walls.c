@@ -6,63 +6,42 @@
 /*   By: bturcott <bturcott@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/25 19:57:27 by mbartole          #+#    #+#             */
-/*   Updated: 2019/03/27 23:02:45 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/04/19 16:08:54 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "wolf.h"
 
-# define N 0x42F4AD
-# define E 0x42D9F4
-# define W 0xF4D742
-# define S 0xF44262
-
-
-void 	convert_texture(SDL_Texture *texture, SDL_Rect position, SDL_Rect *object, int offset)
+static void 	convert_texture(SDL_Texture *texture, SDL_Rect position,
+									SDL_Rect *object, int offset)
 {
 	SDL_Rect curr;
 	SDL_QueryTexture(texture, NULL, NULL, &curr.w, &curr.h);
-//	printf("current == x-> %d y-> %d w-> %d h-> %d\n", curr.x, curr.y, curr.w, curr.h);
 	object->x = offset * (curr.w / BLOCK);
 	object->w = curr.w / BLOCK;
 	object->h = curr.h;
 	object->y = 0;
-	//position->w = curr.w % position->w;
 }
 
+/*
+** params[0] - h (height of wall)
+**       [1] - x (column of pixles in window)
+**       [2] - offset_x (column of pixels in texture)
+**       [3] - n (which texture use from pack)
+*/
 
-int select_texture(float ang, char fl)
+void			paint_walls(t_sdl *sdl, int *params)
 {
-	if ((fl == 'x' && QT_12(ang)))
-		return (0);
-	if ((fl == 'x' && QT_34(ang)))
-		return (1);
-	if ((fl == 'y' && QT_23(ang)))
-		return (2);
-	if ((fl == 'y' && QT_14(ang)))
-		return (3);
-	return (-1);
-}
-
-void		paint_walls(t_sdl *sdl, float ang, int *params, char side)
-{
-	//printf("%d\n", offset);
 	SDL_Rect texture;
 	SDL_Rect object;
-	int i;
-	//printf("angle %f h = %d x = %d offset = %d %c\n", ang, params[0], params[1], params[2], side);
-//	if ((int)((int)ang / (STEP * 400)) % 100 == 0)
-//		printf("%f, %c\n", ang, side);
 	
-	i = select_texture(ang, side);
-	if (i == -1)
+	if (params[3] == -1)
 		return ;
 	texture.h = 2 * params[0];
 	texture.w = 2;
 	texture.x = params[1];
 	texture.y = sdl->cam.horiz - params[0];
-	convert_texture(sdl->texture_pack[i], texture, &object, params[2]);
-	
-		SDL_RenderCopy(sdl->render, sdl->texture_pack[select_texture(ang, side)], &object, &texture);
-		
+	convert_texture(sdl->texture_pack[params[3]], texture, &object, params[2]);
+	SDL_RenderCopy(sdl->render, sdl->texture_pack[params[3]], &object,
+			&texture);		
 }

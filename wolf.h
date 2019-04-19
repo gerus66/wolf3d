@@ -6,7 +6,7 @@
 /*   By: bturcott <bturcott@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/12/20 22:02:59 by mbartole          #+#    #+#             */
-/*   Updated: 2019/03/31 21:47:51 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/04/19 16:05:47 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,6 +124,6 @@ void			texts_to_render(t_sdl *sbox, float ang);
 */
 
 SDL_Texture		**load_textures(t_sdl *sdl);
-void			paint_walls(t_sdl *sdl, float ang, int *params, char side);
+void			paint_walls(t_sdl *sdl, int *params);
 
 #endif
