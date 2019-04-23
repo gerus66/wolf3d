@@ -6,7 +6,7 @@
 /*   By: bturcott <bturcott@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/19 21:10:19 by bturcott          #+#    #+#             */
-/*   Updated: 2019/04/23 18:26:05 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/04/23 19:14:47 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,34 +14,30 @@
 
 static void		rotations(t_sdl *sdl, SDL_Event e)
 {
-	if (e.motion.type == SDL_MOUSEMOTION)
+	if (e.motion.type == SDL_MOUSEMOTION && sdl->flags[2])
 	{
-		if (e.motion.yrel > 1 && sdl->cam.horiz > 5 * MOV_STEP)
+		if (e.motion.yrel > 2 && sdl->cam.horiz > 5 * MOV_STEP)
 			sdl->cam.horiz -= MOV_STEP;
-		else if (e.motion.yrel < -1 && sdl->cam.horiz < WIN_H - 5 * MOV_STEP)
+		else if (e.motion.yrel < -2 && sdl->cam.horiz < WIN_H - 5 * MOV_STEP)
 			sdl->cam.horiz += MOV_STEP;
-	}
-	if (e.motion.type == SDL_MOUSEMOTION)
-	{
-		if (e.motion.xrel > 1)	
+		if (e.motion.xrel > 5)	
 			sdl->cam.angle -= ROT_STEP;
-		else if (e.motion.xrel < -1)
+		else if (e.motion.xrel < -5)
 			sdl->cam.angle += ROT_STEP;
-		if (sdl->cam.angle > M_PI)
-			sdl->cam.angle -= 2 * M_PI;
-		else if (sdl->cam.angle < -M_PI)
-			sdl->cam.angle += 2 * M_PI;
+		fit_angle(&(sdl->cam.angle));
 	}
-	if (e.key.keysym.scancode == 79 || e.key.keysym.scancode == 80)
+	if (e.key.keysym.scancode >= 79 && e.key.keysym.scancode <= 82)
 	{
 		if (e.key.keysym.scancode == 79)	
 			sdl->cam.angle -= ROT_STEP;
-		else
+		else if (e.key.keysym.scancode == 80)
 			sdl->cam.angle += ROT_STEP;
-		if (sdl->cam.angle > M_PI)
-			sdl->cam.angle -= 2 * M_PI;
-		else if (sdl->cam.angle < -M_PI)
-			sdl->cam.angle += 2 * M_PI;
+		else if (e.key.keysym.scancode == 81 && sdl->cam.horiz > 5 * MOV_STEP)	
+			sdl->cam.horiz -= MOV_STEP;
+		else if (e.key.keysym.scancode == 82 &&
+				sdl->cam.horiz < WIN_H - 5 * MOV_STEP)	
+			sdl->cam.horiz += MOV_STEP;
+		fit_angle(&(sdl->cam.angle));
 	}
 }
 
@@ -110,14 +106,12 @@ static void		sdl_loop(t_sdl *sdl)
 				movements(sdl, e.key.keysym.scancode, sdl->cam.angle);
 				if (e.key.keysym.scancode == 41 || e.quit.type == SDL_QUIT)
 					exit(clean_all(sdl, "exit on esc or red cross\n"));
-				else if (e.key.keysym.scancode == 16 && !sdl->flags[0])
-					sdl->flags[0] = 1;
-				else if (e.key.keysym.scancode == 16 && sdl->flags[0])
-					sdl->flags[0] = 0;
-				else if (e.key.keysym.scancode == 23 && !sdl->flags[1])
-					sdl->flags[1] = 1;
-				else if (e.key.keysym.scancode == 23 && sdl->flags[1])
-					sdl->flags[1] = 0;
+				if (e.key.keysym.scancode == SWITCH_MAP)
+					sdl->flags[0] = sdl->flags[0] ? 0 : 1;
+				if (e.key.keysym.scancode == SWITCH_TEXT)
+					sdl->flags[1] = sdl->flags[1] ? 0 : 1;
+				if (e.key.keysym.scancode == SWITCH_MOUSE)
+					sdl->flags[2] = sdl->flags[2] ? 0 : 1;
 				printf("x-> %d y-> %d cos-> %f sin-> %f\n", sdl->cam.x,
 					sdl->cam.y, cos(sdl->cam.angle), sin(sdl->cam.angle));
 			}
@@ -149,8 +143,10 @@ static void		init_sdl(t_sdl *sdl)
 		exit(clean_all(sdl, "No Textures\n"));
 	if (!(sdl->floor = SDL_LoadBMP("textures/1.bmp")))
 		exit(clean_all(sdl, "No Floor texture"));
+	printf("floor w = %d, floor h = %d\n", sdl->floor->w, sdl->floor->h);
 	sdl->flags[0] = 0;
 	sdl->flags[1] = 0;
+	sdl->flags[2] = 0;
 }
 
 int				main(int argc, char **argv)
@@ -160,7 +156,7 @@ int				main(int argc, char **argv)
 
 	sdl.cam.x = 100;
 	sdl.cam.y = 300;
-	sdl.cam.angle = (float)M_PI / 2;
+	sdl.cam.angle = 0.0;
 	sdl.cam.horiz = WIN_H / 2;
 	printf("Distance to proj plane %d\n", (int)DIST);
 	printf("View point on [%d, %d, %d] angle %.1f\n",

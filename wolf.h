@@ -6,7 +6,7 @@
 /*   By: bturcott <bturcott@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/12/20 22:02:59 by mbartole          #+#    #+#             */
-/*   Updated: 2019/04/23 19:06:55 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/04/23 19:14:22 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,8 +35,9 @@ typedef struct	s_view
 }				t_view;
 
 /*
-** flags: 0 - show mini-map;
-**		  1 - swith on texture on walls
+** flags: 0 - show mini-map; /m/
+**		  1 - swith on texture on walls /t/
+**        2 - on/off movement on mouse /space/
 */
 
 typedef struct	s_sdl
@@ -46,7 +47,7 @@ typedef struct	s_sdl
 	SDL_Texture		*text;
 	SDL_Texture		*plane;
 	SDL_Texture		*mapa;
-	unsigned char	flags[2];
+	unsigned char	flags[3];
 	int				mouse_pos[2];
 	t_vector		*map;
 	t_view			cam;
@@ -60,6 +61,9 @@ typedef struct	s_sdl
 # define RIGHT 7
 # define DOWN 22
 # define LEFT 4
+# define SWITCH_MAP 16
+# define SWITCH_TEXT 23
+# define SWITCH_MOUSE 44
 
 # define USAGE "./wolf [path_to_file_with_map]\n"
 
@@ -71,8 +75,8 @@ typedef struct	s_sdl
 # define NAME "Wolf3D"
 # define WIN_POS_X 1000
 # define WIN_POS_Y 1000
-# define WIN_W 700
-# define WIN_H 700
+# define WIN_W 1500
+# define WIN_H 1000
 # define WIN_FLAGS 0
 
 # define REN_FLAGS 0
@@ -103,6 +107,7 @@ typedef struct	s_sdl
 
 int				clean_all(t_sdl *sdl, char *msg);
 void			reprint_all(t_sdl *sdl);
+void			fit_angle(float *angle);
 
 /*
 ** read map from file
