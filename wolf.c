@@ -6,7 +6,7 @@
 /*   By: bturcott <bturcott@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/19 21:10:19 by bturcott          #+#    #+#             */
-/*   Updated: 2019/04/23 13:28:32 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/04/23 17:01:01 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,24 +14,29 @@
 
 static void		rotations(t_sdl *sdl, SDL_Event e)
 {
-	if (e.motion.type == SDL_MOUSEMOTION)
+	if (e.motion.type == SDL_MOUSEMOTION && sdl->flags[2])
 	{
 		if (e.motion.yrel > 2 && sdl->cam.horiz > 5 * MOV_STEP)
 			sdl->cam.horiz -= MOV_STEP;
 		else if (e.motion.yrel < -2 && sdl->cam.horiz < WIN_H - 5 * MOV_STEP)
 			sdl->cam.horiz += MOV_STEP;
-		if (sdl->flags[2] && e.motion.xrel > 1)	
+		if (e.motion.xrel > 5)	
 			sdl->cam.angle -= ROT_STEP;
-		else if (sdl->flags[2] && e.motion.xrel < -1)
+		else if (e.motion.xrel < -5)
 			sdl->cam.angle += ROT_STEP;
 		fit_angle(&(sdl->cam.angle));
 	}
-	if (e.key.keysym.scancode == 79 || e.key.keysym.scancode == 80)
+	if (e.key.keysym.scancode >= 79 && e.key.keysym.scancode <= 82)
 	{
 		if (e.key.keysym.scancode == 79)	
 			sdl->cam.angle -= ROT_STEP;
-		else
+		else if (e.key.keysym.scancode == 80)
 			sdl->cam.angle += ROT_STEP;
+		else if (e.key.keysym.scancode == 81 && sdl->cam.horiz > 5 * MOV_STEP)	
+			sdl->cam.horiz -= MOV_STEP;
+		else if (e.key.keysym.scancode == 82 &&
+				sdl->cam.horiz < WIN_H - 5 * MOV_STEP)	
+			sdl->cam.horiz += MOV_STEP;
 		fit_angle(&(sdl->cam.angle));
 	}
 }

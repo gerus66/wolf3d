@@ -6,7 +6,7 @@
 /*   By: bturcott <bturcott@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/20 20:42:36 by mbartole          #+#    #+#             */
-/*   Updated: 2019/04/23 13:29:26 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/04/23 17:05:30 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -154,14 +154,24 @@ static void		get_floor_offset(t_sdl *sbox, float ang, int *off_x, int *off_y)
 {
 	float	dist;
 	int		coef;
+	float	loc_ang;
 
-	dist = CAM_H * DIST / (*off_y - WIN_H / 2);
+	loc_ang = ang - sbox->cam.angle;
+	dist = CAM_H * DIST / ABS(*off_y - sbox->cam.horiz) / cos(loc_ang);
 	coef = sbox->floor->w / BLOCK;
-	*off_y = -((int)(dist * coef) - sbox->cam.y * coef % sbox->floor->w) %
-		sbox->floor->w; 
-	*off_x = ((int)(dist * tan(ang - sbox->cam.angle) * coef) -
-			sbox->cam.x * coef % sbox->floor->w) % sbox->floor->w;
-//	printf("[%.1f %d, %d] ", dist, *off_x, *off_y);
+	
+	*off_y = (int)(dist * (QT_12(ang) ? sin(ang) : -sin(ang)) * coef);
+	if (*off_y <= BLOCK * coef)
+		*off_y += BLOCK * coef;
+	*off_y -= QT_12(ang) ? sbox->cam.y * coef % sbox->floor->w
+				: sbox->floor->w - sbox->cam.y * coef % sbox->floor->w;
+	*off_y = - (*off_y % sbox->floor->w);
+	
+	*off_x = (int)(dist * (QT_14(ang) ? cos(ang) : -cos(ang)) * coef);
+	*off_x -= QT_14(ang) ? sbox->cam.x * coef % sbox->floor->w
+				: sbox->floor->w - sbox->cam.x * coef % sbox->floor->w;
+	*off_x = - (*off_x % sbox->floor->w);
+	printf("[%d, %d] ", *off_x, *off_y);
 }
 
 /*
