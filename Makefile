@@ -21,8 +21,8 @@ FLAGS =
 #MFL = -lmlx -framework OpenGL -framework AppKit
 #MLX = /usr/local/lib/
 #MLXH = /usr/local/include
-SDLFL = -l SDL2
-SDL = /Users/*/.brew/Cellar/sdl2/2.0.9/lib/
+SDLFL = -l SDL2 -l SDL2_MIXER
+SDL = /Users/*/.brew/Cellar/sdl2/2.0.9/lib/ -L /Users/*/.brew/Cellar/sdl2_mixer/2.0.4/lib/
 SDLH = SDL/includes
 
 all: lib $(NAME)
