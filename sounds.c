@@ -6,7 +6,7 @@
 /*   By: bturcott <bturcott@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/22 17:31:18 by bturcott          #+#    #+#             */
-/*   Updated: 2019/04/23 15:11:58 by bturcott         ###   ########.fr       */
+/*   Updated: 2019/04/23 15:15:49 by bturcott         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,4 +52,5 @@ int music_control_panel(Mix_Music **samples, int command)
         Mix_PlayMusic(samples[0], 0);
     else if (command == 6)
         Mix_PlayMusic(samples[0], -1);
+    return (0);
 }
