@@ -6,7 +6,7 @@
 /*   By: bturcott <bturcott@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/19 21:10:19 by bturcott          #+#    #+#             */
-/*   Updated: 2019/03/28 16:13:52 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/04/23 14:54:41 by bturcott         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -177,6 +177,7 @@ int				main(int argc, char **argv)
 
 	read_map(&sdl, fd);
 	init_sdl(&sdl);
+	init_music(&sdl);
 	sdl_loop(&sdl);
 
 	return (0);
