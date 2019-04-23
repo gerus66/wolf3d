@@ -6,7 +6,7 @@
 /*   By: bturcott <bturcott@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/12/20 22:02:59 by mbartole          #+#    #+#             */
-/*   Updated: 2019/04/23 19:14:22 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/04/23 22:32:53 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,8 +75,8 @@ typedef struct	s_sdl
 # define NAME "Wolf3D"
 # define WIN_POS_X 1000
 # define WIN_POS_Y 1000
-# define WIN_W 1500
-# define WIN_H 1000
+# define WIN_W 700
+# define WIN_H 500
 # define WIN_FLAGS 0
 
 # define REN_FLAGS 0

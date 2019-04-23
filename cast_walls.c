@@ -6,7 +6,7 @@
 /*   By: bturcott <bturcott@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/20 20:42:36 by mbartole          #+#    #+#             */
-/*   Updated: 2019/04/23 21:44:18 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/04/23 23:06:17 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -154,27 +154,35 @@ static void		get_floor_offset(t_sdl *sbox, float ang, int *off_x, int *off_y)
 {
 	float	dist;
 	int		coef;
-	float	loc_ang;
 
-	loc_ang = ang - sbox->cam.angle;
-	dist = CAM_H * DIST / ABS(*off_y - sbox->cam.horiz) / cos(loc_ang);
+//	int fl = 0;
+//	if (*off_y > 340 && *off_y < 360)
+//		fl = 1;
+	dist = CAM_H * DIST / ABS(*off_y - sbox->cam.horiz) /
+		cos(ang - sbox->cam.angle);
 	coef = sbox->floor->w / BLOCK;
 	
 	*off_y = (int)(dist * (QT_12(ang) ? sin(ang) : -sin(ang)) * coef);
-	if (*off_y <= BLOCK * coef)
-		*off_y += BLOCK * coef;
+	if (*off_y <= sbox->floor->w)
+		*off_y += sbox->floor->w;
 	*off_y -= QT_12(ang) ? sbox->cam.y * coef % sbox->floor->w
 				: sbox->floor->w - sbox->cam.y * coef % sbox->floor->w;
-	*off_y =  *off_y % sbox->floor->w;
-//	if (tan(ang) < 0)
-//		*off_y = BLOCK * coef - *off_y;
+	*off_y =  QT_14(ang) ? sbox->floor->w - *off_y % sbox->floor->w :
+		*off_y % sbox->floor->w;
+	if (*off_y == sbox->floor->w)
+		*off_y = 0;
 	
 	*off_x = (int)(dist * (QT_14(ang) ? cos(ang) : -cos(ang)) * coef);
-	*off_x -= QT_14(ang) ? sbox->cam.x * coef % sbox->floor->w
-				: sbox->floor->w - sbox->cam.x * coef % sbox->floor->w;
-	*off_x =  *off_x % sbox->floor->w;
-	if (tan(ang) > 0)
-		*off_x = BLOCK * coef - *off_x;
+	if (*off_x <= sbox->floor->w)
+		*off_x += sbox->floor->w;
+	*off_x -= QT_14(ang) ? sbox->floor->w - sbox->cam.x * coef % sbox->floor->w
+				: sbox->cam.x * coef % sbox->floor->w;
+	*off_x = QT_14(ang) ? *off_x % sbox->floor->w :
+		sbox->floor->w - *off_x % sbox->floor->w;
+	if (*off_x == sbox->floor->w)
+		*off_x = 0;
+//	if (fl)
+//		printf("[%d %d] ", *off_x, *off_y);
 }
 
 /*
