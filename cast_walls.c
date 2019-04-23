@@ -6,7 +6,7 @@
 /*   By: bturcott <bturcott@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/20 20:42:36 by mbartole          #+#    #+#             */
-/*   Updated: 2019/04/19 22:30:12 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/04/23 13:29:26 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -153,11 +153,15 @@ static int		all_color(float ang, int *param, char fl)
 static void		get_floor_offset(t_sdl *sbox, float ang, int *off_x, int *off_y)
 {
 	float	dist;
+	int		coef;
 
-	dist = - CAM_H * DIST / (*off_y - WIN_H / 2);
-	*off_y = ((int)dist - sbox->cam.y % BLOCK) % BLOCK; 
-	*off_x = ((int)(dist * tan(ang - sbox->cam.angle)) -
-			sbox->cam.x % BLOCK) % BLOCK;
+	dist = CAM_H * DIST / (*off_y - WIN_H / 2);
+	coef = sbox->floor->w / BLOCK;
+	*off_y = -((int)(dist * coef) - sbox->cam.y * coef % sbox->floor->w) %
+		sbox->floor->w; 
+	*off_x = ((int)(dist * tan(ang - sbox->cam.angle) * coef) -
+			sbox->cam.x * coef % sbox->floor->w) % sbox->floor->w;
+//	printf("[%.1f %d, %d] ", dist, *off_x, *off_y);
 }
 
 /*
@@ -177,7 +181,7 @@ static int		just_sky(t_sdl *sbox, int *param, float ang)
 		off_y = param[1];
 		get_floor_offset(sbox, ang, &off_x, &off_y);
 		p = (Uint32 *)(sbox->floor->pixels);
-	//	printf("%d ", off_y * sbox->floor->w + off_x);
+//		printf(" //%d// ", off_y * sbox->floor->w + off_x);
 		return (p[off_y * sbox->floor->w + off_x]);
 	}
 	if (param[1] < sbox->cam.horiz - param[0] ||
@@ -203,10 +207,8 @@ void			pixels_to_render(t_sdl *sbox, unsigned int *map, float ang)
 	i = -1;
 	while (++i < WIN_W)
 	{
-		if (ang > M_PI)
-			ang = -(2 * M_PI - ang);
-		else if (ang < -M_PI)
-			ang = 2 * M_PI + ang;
+//		printf("\ncolumn %d ---- ", i);
+		fit_angle(&ang);
 		fl = 0;
 		offset = 0;
 		h = get_height(sbox, ang, &offset, &fl);

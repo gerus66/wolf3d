@@ -6,7 +6,7 @@
 /*   By: bturcott <bturcott@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/19 21:10:19 by bturcott          #+#    #+#             */
-/*   Updated: 2019/04/22 23:09:58 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/04/23 13:28:32 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,10 +24,7 @@ static void		rotations(t_sdl *sdl, SDL_Event e)
 			sdl->cam.angle -= ROT_STEP;
 		else if (sdl->flags[2] && e.motion.xrel < -1)
 			sdl->cam.angle += ROT_STEP;
-		if (sdl->cam.angle > M_PI)
-			sdl->cam.angle -= 2 * M_PI;
-		else if (sdl->cam.angle < -M_PI)
-			sdl->cam.angle += 2 * M_PI;
+		fit_angle(&(sdl->cam.angle));
 	}
 	if (e.key.keysym.scancode == 79 || e.key.keysym.scancode == 80)
 	{
@@ -35,10 +32,7 @@ static void		rotations(t_sdl *sdl, SDL_Event e)
 			sdl->cam.angle -= ROT_STEP;
 		else
 			sdl->cam.angle += ROT_STEP;
-		if (sdl->cam.angle > M_PI)
-			sdl->cam.angle -= 2 * M_PI;
-		else if (sdl->cam.angle < -M_PI)
-			sdl->cam.angle += 2 * M_PI;
+		fit_angle(&(sdl->cam.angle));
 	}
 }
 
@@ -144,6 +138,7 @@ static void		init_sdl(t_sdl *sdl)
 		exit(clean_all(sdl, "No Textures\n"));
 	if (!(sdl->floor = SDL_LoadBMP("textures/1.bmp")))
 		exit(clean_all(sdl, "No Floor texture"));
+	printf("floor w = %d, floor h = %d\n", sdl->floor->w, sdl->floor->h);
 	sdl->flags[0] = 0;
 	sdl->flags[1] = 0;
 	sdl->flags[2] = 0;
@@ -156,7 +151,7 @@ int				main(int argc, char **argv)
 
 	sdl.cam.x = 100;
 	sdl.cam.y = 300;
-	sdl.cam.angle = (float)M_PI / 2;
+	sdl.cam.angle = 0.0;
 	sdl.cam.horiz = WIN_H / 2;
 	printf("Distance to proj plane %d\n", (int)DIST);
 	printf("View point on [%d, %d, %d] angle %.1f\n",
