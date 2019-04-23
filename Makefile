@@ -22,7 +22,7 @@ FLAGS =
 #MLX = /usr/local/lib/
 #MLXH = /usr/local/include
 SDLFL = -l SDL2 -l SDL2_MIXER
-SDL = /Users/*/.brew/Cellar/sdl2/2.0.9/lib/
+SDL = /Users/*/.brew/Cellar/sdl2/2.0.9_1/lib/
 SDL_MIXER = /Users/*/.brew/Cellar/sdl2_mixer/2.0.4/lib/
 SDLH = SDL/includes
 

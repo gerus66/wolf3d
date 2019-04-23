@@ -6,7 +6,7 @@
 /*   By: bturcott <bturcott@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/12/20 22:02:59 by mbartole          #+#    #+#             */
-/*   Updated: 2019/04/23 18:27:05 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/04/23 19:06:55 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,8 @@ typedef struct	s_sdl
 	t_view			cam;
 	SDL_Surface		*floor;
 	SDL_Texture		**texture_pack;
-	Mix_Music		**samples;
+	Mix_Chunk		**samples;
+	Mix_Music		*music;
 }				t_sdl;
 
 # define UP 26
@@ -134,4 +135,5 @@ void			paint_walls(t_sdl *sdl, int *params);
 */
 
 int 			init_music(t_sdl *sdl);
+int				sounds_control_panel(Mix_Chunk **samples, int command);
 #endif
