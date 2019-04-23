@@ -6,7 +6,7 @@
 /*   By: bturcott <bturcott@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/19 21:10:19 by bturcott          #+#    #+#             */
-/*   Updated: 2019/04/23 19:14:47 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/04/23 20:33:45 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,13 +137,12 @@ static void		init_sdl(t_sdl *sdl)
 		exit(clean_all(sdl, "Cant create the plane\n"));
 	if (!(sdl->mapa = SDL_CreateTexture(sdl->render, TXT_FORMAT, TXT_ACCESS,
 					sdl->map->offset * 30, MAP_H(sdl->map) * 30)))
-			//		sdl->map->offset, sdl->map->len / sdl->map->offset / 12)))
 		exit(clean_all(sdl, "Cant create the map\n"));
 	if (!(sdl->texture_pack = load_textures(sdl)))
 		exit(clean_all(sdl, "No Textures\n"));
-	if (!(sdl->floor = SDL_LoadBMP("textures/1.bmp")))
+	if (!(sdl->floor = SDL_LoadBMP("textures/2.bmp")))
 		exit(clean_all(sdl, "No Floor texture"));
-	printf("floor w = %d, floor h = %d\n", sdl->floor->w, sdl->floor->h);
+	sdl->floor = SDL_ConvertSurfaceFormat(sdl->floor, TXT_FORMAT, 0);
 	sdl->flags[0] = 0;
 	sdl->flags[1] = 0;
 	sdl->flags[2] = 0;
