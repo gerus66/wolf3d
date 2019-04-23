@@ -6,7 +6,7 @@
 /*   By: bturcott <bturcott@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/12/20 22:02:59 by mbartole          #+#    #+#             */
-/*   Updated: 2019/03/31 21:47:51 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/04/23 15:00:07 by bturcott         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 # include <math.h>
 # include "libft/libft.h"
 # include "SDL/includes/SDL.h"
+# include "SDL/includes/SDL_mixer.h"
 
 typedef struct	s_point
 {
@@ -50,6 +51,7 @@ typedef struct	s_sdl
 	t_vector		*map;
 	t_view			cam;
 	SDL_Texture		**texture_pack;
+	Mix_Music		**samples;
 }				t_sdl;
 
 # define UP 26
@@ -126,4 +128,9 @@ void			texts_to_render(t_sdl *sbox, float ang);
 SDL_Texture		**load_textures(t_sdl *sdl);
 void			paint_walls(t_sdl *sdl, float ang, int *params, char side);
 
+/*
+** playing music
+*/
+
+int 			init_music(t_sdl *sdl);
 #endif
