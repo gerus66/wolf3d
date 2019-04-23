@@ -6,7 +6,7 @@
 /*   By: bturcott <bturcott@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/19 21:10:19 by bturcott          #+#    #+#             */
-/*   Updated: 2019/04/23 20:33:45 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/04/23 20:38:03 by bturcott         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,7 +140,7 @@ static void		init_sdl(t_sdl *sdl)
 		exit(clean_all(sdl, "Cant create the map\n"));
 	if (!(sdl->texture_pack = load_textures(sdl)))
 		exit(clean_all(sdl, "No Textures\n"));
-	if (!(sdl->floor = SDL_LoadBMP("textures/2.bmp")))
+	if (!(sdl->floor = SDL_LoadBMP("textures/floor.bmp")))
 		exit(clean_all(sdl, "No Floor texture"));
 	sdl->floor = SDL_ConvertSurfaceFormat(sdl->floor, TXT_FORMAT, 0);
 	sdl->flags[0] = 0;
