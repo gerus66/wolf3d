@@ -6,7 +6,7 @@
 /*   By: bturcott <bturcott@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/25 19:57:27 by mbartole          #+#    #+#             */
-/*   Updated: 2019/04/24 13:04:30 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/04/24 15:10:01 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,25 +46,38 @@ void			paint_walls(t_sdl *sdl, int *params)
 			&texture);		
 }
 
-/*
-** params[0] - x (coord of pixel in window)
-**       [1] - y (coord of pixel in window)
-**       [2] - offset_x (coord of pixel in texture)
-**       [3] - offset_y (coord of pixel in texture)
-*/
-/*
-void			paint_floor(t_sdl *sdl, int *params)
+static int		select_text(float ang, char fl)
 {
-	SDL_Rect texture;
-	SDL_Rect object;
-	
-//	if (params[3] == -1)
-//		return ;
-	texture.h = 2;
-	texture.w = 2;
-	texture.x = params[0];
-	texture.y = params[1];
-	convert_texture(sdl->texture_pack[1], texture, &object, params[2]);
-	SDL_RenderCopy(sdl->render, sdl->texture_pack[params[3]], &object,
-			&texture);		
-}*/
+	if ((fl == 'x' && QT_12(ang)))
+		return (0);
+	if ((fl == 'x' && QT_34(ang)))
+		return (1);
+	if ((fl == 'y' && QT_23(ang)))
+		return (2);
+	if ((fl == 'y' && QT_14(ang)))
+		return (3);
+	return (-1);
+}
+
+void			texts_to_render(t_sdl *sbox, float ang)
+{
+	int		i;
+	int		j;
+	int		h;
+	char	fl;
+	int		offset;
+
+	i = -1;
+	while (++i < WIN_W)
+	{
+		if (ang > M_PI)
+			ang = -(2 * M_PI - ang);
+		else if (ang < -M_PI)
+			ang = 2 * M_PI + ang;
+		fl = 0;
+		offset = 0;
+		h = get_height(sbox, ang, &offset, &fl);
+		paint_walls(sbox, (int[]){h, i, offset % BLOCK, select_text(ang, fl)});
+		ang -= STEP;
+	}
+}
