@@ -6,21 +6,20 @@
 /*   By: bturcott <bturcott@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/19 21:10:19 by bturcott          #+#    #+#             */
-/*   Updated: 2019/04/24 15:36:31 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/04/24 16:11:38 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "wolf.h"
-//#define COLLISION(val) ((val < sqrt(pow(MOV_STEP / 10, 2)) ? 1 : 0))
 
-static void		rotations(t_sdl *sdl, SDL_Event e)
+static void				rotations(t_sdl *sdl, SDL_Event e)
 {
 	if (e.motion.type == SDL_MOUSEMOTION && sdl->flags[2])
 	{
 		if (e.motion.yrel > 2 && sdl->cam.horiz > 5 * MOV_STEP)
-			sdl->cam.horiz -= MOV_STEP;
+			sdl->cam.horiz -= 2 * MOV_STEP;
 		else if (e.motion.yrel < -2 && sdl->cam.horiz < WIN_H - 5 * MOV_STEP)
-			sdl->cam.horiz += MOV_STEP;
+			sdl->cam.horiz += 2 * MOV_STEP;
 		if (e.motion.xrel > 5)
 			sdl->cam.angle -= ROT_STEP;
 		else if (e.motion.xrel < -5)
@@ -42,37 +41,7 @@ static void		rotations(t_sdl *sdl, SDL_Event e)
 	}
 }
 
-static void		movements(t_sdl *sdl, int key, float ang)
-{
-	char	yfl;
-	char	xfl;
-	int		x;
-	int		y;
-
-	xfl = 1;
-	yfl = 1;
-	if (!(key == UP || key == DOWN || key == LEFT || key == RIGHT))
-		return ;
-	ang += (key == DOWN) ? M_PI : 0;
-	ang += (key == LEFT) ? M_PI * 0.5 : 0;
-	ang += (key == RIGHT) ? M_PI * 1.5 : 0;
-	y = (float)sdl->cam.y - ((float)MOV_STEP * 2.0 * sin(ang));
-	x = (float)sdl->cam.x + ((float)MOV_STEP * 2.0 * cos(ang));
-	if (x <= 0 || x >= MAP_W(sdl->map) * BLOCK ||
-			MAP(sdl->map)[MAP_W(sdl->map) * (sdl->cam.y / BLOCK) + x / BLOCK].h)
-		xfl = 0;
-	if (y <= 0 || y >= MAP_H(sdl->map) * BLOCK ||
-			MAP(sdl->map)[MAP_W(sdl->map) * (y / BLOCK) + sdl->cam.x / BLOCK].h)
-		yfl = 0;
-	if (xfl)
-		sdl->cam.x += (int)((float)MOV_STEP * cos(ang));
-	if (yfl)
-		sdl->cam.y -= (int)((float)MOV_STEP * sin(ang));
-	if (!xfl || !yfl)
-		sounds_control_panel(sdl->samples, 3);
-}
-
-static void		sdl_loop(t_sdl *sdl)
+static void				sdl_loop(t_sdl *sdl)
 {
 	SDL_Event e;
 
@@ -81,12 +50,12 @@ static void		sdl_loop(t_sdl *sdl)
 		if (SDL_PollEvent(&e))
 		{
 			rotations(sdl, e);
-			if (e.key.type == SDL_KEYDOWN)
+			if (e.key.type == SDL_KEYDOWN || e.type == SDL_QUIT)
 			{
 				sounds(sdl, e);
 				movements(sdl, e.key.keysym.scancode, sdl->cam.angle);
-				if (e.key.keysym.scancode == 41 || e.quit.type == SDL_QUIT)
-					exit(clean_all(sdl, "exit on esc or red cross\n"));
+				if (e.key.keysym.scancode == 41 || e.type == SDL_QUIT)
+					exit(clean_all(sdl, ""));
 				if (e.key.keysym.scancode == SWITCH_MAP)
 					sdl->flags[0] = sdl->flags[0] ? 0 : 1;
 				if (e.key.keysym.scancode == SWITCH_TEXT)
@@ -99,7 +68,28 @@ static void		sdl_loop(t_sdl *sdl)
 	}
 }
 
-static void		init_sdl(t_sdl *sdl)
+static SDL_Texture		**load_textures(t_sdl *sdl)
+{
+	SDL_Texture **texts;
+
+	if (!(texts = ft_memalloc(sizeof(SDL_Texture *) * 4)))
+		exit(clean_all(sdl, "Malloc fail\n"));
+	if (!(texts[0] = SDL_CreateTextureFromSurface(sdl->render,
+					SDL_LoadBMP("textures/1.bmp"))))
+		exit(clean_all(sdl, "Texture loading fail\n"));
+	if (!(texts[1] = SDL_CreateTextureFromSurface(sdl->render,
+					SDL_LoadBMP("textures/2.bmp"))))
+		exit(clean_all(sdl, "Texture loading fail\n"));
+	if (!(texts[2] = SDL_CreateTextureFromSurface(sdl->render,
+					SDL_LoadBMP("textures/3.bmp"))))
+		exit(clean_all(sdl, "Texture loading fail\n"));
+	if (!(texts[3] = SDL_CreateTextureFromSurface(sdl->render,
+					SDL_LoadBMP("textures/4.bmp"))))
+		exit(clean_all(sdl, "Texture loading fail\n"));
+	return (texts);
+}
+
+static void				init_sdl(t_sdl *sdl)
 {
 	if (SDL_Init(SDL_INIT_EVERYTHING))
 		exit(clean_all(sdl, "Cant initialize SDL\n"));
@@ -111,14 +101,10 @@ static void		init_sdl(t_sdl *sdl)
 	if (!(sdl->text = SDL_CreateTexture(sdl->render, TXT_FORMAT, TXT_ACCESS,
 					WIN_W, WIN_H)))
 		exit(clean_all(sdl, "Cant create texture\n"));
-	if (!(sdl->plane = SDL_CreateTexture(sdl->render, TXT_FORMAT, TXT_ACCESS,
-					WIN_W, WIN_H)))
-		exit(clean_all(sdl, "Cant create the plane\n"));
 	if (!(sdl->mapa = SDL_CreateTexture(sdl->render, TXT_FORMAT, TXT_ACCESS,
 					sdl->map->offset * 30, MAP_H(sdl->map) * 30)))
 		exit(clean_all(sdl, "Cant create the map\n"));
-	if (!(sdl->texture_pack = load_textures(sdl)))
-		exit(clean_all(sdl, "No Textures\n"));
+	sdl->texture_pack = load_textures(sdl);
 	if (!(sdl->floor = SDL_LoadBMP("textures/floor.bmp")))
 		exit(clean_all(sdl, "No Floor texture"));
 	sdl->floor = SDL_ConvertSurfaceFormat(sdl->floor, TXT_FORMAT, 0);
@@ -127,14 +113,14 @@ static void		init_sdl(t_sdl *sdl)
 	sdl->flags[2] = 0;
 }
 
-int				main(int argc, char **argv)
+int						main(int argc, char **argv)
 {
 	t_sdl	sdl;
 	int		fd;
 
 	sdl.cam.x = 50;
 	sdl.cam.y = 300;
-	sdl.cam.angle = (float)M_PI / 2;
+	sdl.cam.angle = 0.0;
 	sdl.cam.horiz = WIN_H / 2;
 	if (argc == 1 && (fd = open(MAP_DEFAULT, O_RDONLY)) == -1)
 		return (clean_all(&sdl, "Cant open default map\n"));

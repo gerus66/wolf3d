@@ -6,7 +6,7 @@
 /*   By: bturcott <bturcott@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/25 19:57:27 by mbartole          #+#    #+#             */
-/*   Updated: 2019/04/24 15:29:13 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/04/24 16:12:08 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,25 +84,4 @@ void			texts_to_render(t_sdl *sbox, float ang)
 		paint_walls(sbox, (int[]){h, i, offset % BLOCK, select_text(ang, fl)});
 		ang -= STEP;
 	}
-}
-
-SDL_Texture		**load_textures(t_sdl *sdl)
-{
-	SDL_Texture **texts;
-
-	if (!(texts = ft_memalloc(sizeof(SDL_Texture *) * 4)))
-		exit(clean_all(sdl, "Malloc fail\n"));
-	if (!(texts[0] = SDL_CreateTextureFromSurface(sdl->render,
-					SDL_LoadBMP("textures/1.bmp"))))
-		exit(clean_all(sdl, "Texture loading fail\n"));
-	if (!(texts[1] = SDL_CreateTextureFromSurface(sdl->render,
-					SDL_LoadBMP("textures/2.bmp"))))
-		exit(clean_all(sdl, "Texture loading fail\n"));
-	if (!(texts[2] = SDL_CreateTextureFromSurface(sdl->render,
-					SDL_LoadBMP("textures/3.bmp"))))
-		exit(clean_all(sdl, "Texture loading fail\n"));
-	if (!(texts[3] = SDL_CreateTextureFromSurface(sdl->render,
-					SDL_LoadBMP("textures/4.bmp"))))
-		exit(clean_all(sdl, "Texture loading fail\n"));
-	return (texts);
 }

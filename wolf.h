@@ -6,7 +6,7 @@
 /*   By: bturcott <bturcott@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/12/20 22:02:59 by mbartole          #+#    #+#             */
-/*   Updated: 2019/04/24 15:04:23 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/04/24 16:11:20 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,6 @@ typedef struct	s_sdl
 	SDL_Window		*window;
 	SDL_Renderer	*render;
 	SDL_Texture		*text;
-	SDL_Texture		*plane;
 	SDL_Texture		*mapa;
 	unsigned char	flags[3];
 	int				mouse_pos[2];
@@ -116,13 +115,19 @@ void			fit_angle(float *angle);
 void			read_map(t_sdl *sbox, int fd);
 
 /*
+** handle movements and collisions
+*/
+
+void			movements(t_sdl *sdl, int key, float ang);
+
+/*
 ** create mini-map
 */
 
 void			draw_map(t_sdl *sdl, unsigned int *map);
 
 /*
-** get height of wall (ray-casting, in fact) /get_height.c (5)/
+** get height of wall (ray-casting, in fact)
 */
 
 float			get_height(t_sdl *sbox, float ang, int *offset, char *fl);
@@ -138,14 +143,14 @@ void			texts_to_render(t_sdl *sbox, float ang);
 ** painting of walls
 */
 
-SDL_Texture		**load_textures(t_sdl *sdl);
 void			paint_walls(t_sdl *sdl, int *params);
 
 /*
 ** playing music
 */
 
-int 			init_music(t_sdl *sdl);
+int				init_music(t_sdl *sdl);
 int				sounds_control_panel(Mix_Chunk **samples, int command);
-void 			sounds(t_sdl *sdl, SDL_Event e);
+void			sounds(t_sdl *sdl, SDL_Event e);
+
 #endif
