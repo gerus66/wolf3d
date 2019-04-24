@@ -6,7 +6,7 @@
 /*   By: bturcott <bturcott@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/20 20:42:36 by mbartole          #+#    #+#             */
-/*   Updated: 2019/04/24 12:38:25 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/04/24 14:49:35 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -155,20 +155,20 @@ static void		get_floor_offset(t_sdl *sbox, float ang, int *off_x, int *off_y)
 	float	dist;
 	int		coef;
 
-//	int fl = 0;
-//	if (*off_y > 340 && *off_y < 360)
-//		fl = 1;
-	dist = CAM_H * DIST / ABS(*off_y - sbox->cam.horiz) /
+	dist = 2 * CAM_H * DIST / ABS(*off_y - sbox->cam.horiz) /
 		cos(ang - sbox->cam.angle);
 	coef = sbox->floor->w / BLOCK;
-	
+//	printf("[%.1f ", dist);
 	*off_y = (int)(dist * (QT_12(ang) ? sin(ang) : -sin(ang)) * coef);
+//	printf("%d ", *off_y);
 	if (*off_y <= sbox->floor->w)
 		*off_y += sbox->floor->w;
 	*off_y -= QT_12(ang) ? sbox->cam.y * coef % sbox->floor->w
 				: sbox->floor->w - sbox->cam.y * coef % sbox->floor->w;
+//	printf("%d ", *off_y);
 	*off_y =  QT_12(ang) ? sbox->floor->w - *off_y % sbox->floor->w :
 		*off_y % sbox->floor->w;
+//	printf("%d] ", *off_y);
 	if (*off_y == sbox->floor->w)
 		*off_y = 0;
 	
@@ -181,8 +181,7 @@ static void		get_floor_offset(t_sdl *sbox, float ang, int *off_x, int *off_y)
 		sbox->floor->w - *off_x % sbox->floor->w;
 	if (*off_x == sbox->floor->w)
 		*off_x = 0;
-//	if (fl)
-//		printf("[%d %d] ", *off_x, *off_y);
+//	printf("[%d %d] ", *off_x, *off_y);
 }
 
 /*
@@ -227,6 +226,7 @@ void			pixels_to_render(t_sdl *sbox, unsigned int *map, float ang)
 	i = -1;
 	while (++i < WIN_W)
 	{
+		printf("\ncolumn %d ---- ", i);
 		fit_angle(&ang);
 		fl = 0;
 		offset = 0;
@@ -262,8 +262,7 @@ void			texts_to_render(t_sdl *sbox, float ang)
 	int		offset;
 
 //	printf("map %d x %d \n", MAP_W(sbox->map), MAP_H(sbox->map));
-//	printf("I m in [%d %d] looking at %d grad ", sbox->cam.x / BLOCK,
-//			sbox->cam.y / BLOCK, (int)(sbox->cam.angle / M_PI * 180));
+	printf("I m in [%d %d]", sbox->cam.x, sbox->cam.y);
 //	printf("(from %d to %d grad)\n",
 //			(int)((sbox->cam.angle - FOV / 2) / M_PI * 180),
 //			(int)((sbox->cam.angle + FOV / 2) / M_PI * 180));

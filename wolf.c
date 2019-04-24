@@ -6,7 +6,7 @@
 /*   By: bturcott <bturcott@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/19 21:10:19 by bturcott          #+#    #+#             */
-/*   Updated: 2019/04/24 11:39:11 by bturcott         ###   ########.fr       */
+/*   Updated: 2019/04/24 13:03:25 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,7 +137,7 @@ int				main(int argc, char **argv)
 
 	sdl.cam.x = 100;
 	sdl.cam.y = 300;
-	sdl.cam.angle = 0.0;
+	sdl.cam.angle = (float)M_PI / 2;
 	sdl.cam.horiz = WIN_H / 2;
 	printf("Distance to proj plane %d\n", (int)DIST);
 	printf("View point on [%d, %d, %d] angle %.1f\n",
