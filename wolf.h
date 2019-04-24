@@ -6,7 +6,7 @@
 /*   By: bturcott <bturcott@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/12/20 22:02:59 by mbartole          #+#    #+#             */
-/*   Updated: 2019/04/23 22:32:53 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/04/24 12:07:15 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,4 +141,5 @@ void			paint_walls(t_sdl *sdl, int *params);
 
 int 			init_music(t_sdl *sdl);
 int				sounds_control_panel(Mix_Chunk **samples, int command);
+void 			sounds(t_sdl *sdl, SDL_Event e);
 #endif

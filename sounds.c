@@ -6,7 +6,7 @@
 /*   By: bturcott <bturcott@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/22 17:31:18 by bturcott          #+#    #+#             */
-/*   Updated: 2019/04/23 17:00:41 by bturcott         ###   ########.fr       */
+/*   Updated: 2019/04/24 11:42:58 by bturcott         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,8 +36,8 @@ int init_music(t_sdl *sdl)
     samples[3] = Mix_LoadWAV(CUSTOM);
     sdl->samples = samples;
     sdl->music = mus;
-    //  if (Mix_PlayMusic(mus, -1) == -1)
-    //      ft_putendl("no music :(");
+    Mix_PlayMusic(mus, -1);
+
     Mix_AllocateChannels(4);
     return (1);
 }
@@ -76,4 +76,11 @@ void sounds(t_sdl *sdl, SDL_Event e)
         sounds_control_panel(sdl->samples, 2);
     else if (key == 16)
         sounds_control_panel(sdl->samples, 1);
+    else if (key == 48)
+    {
+        if (Mix_PausedMusic() == 1)
+            Mix_ResumeMusic();
+        else
+            Mix_PauseMusic();
+    }
 }

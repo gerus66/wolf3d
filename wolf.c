@@ -6,11 +6,12 @@
 /*   By: bturcott <bturcott@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/19 21:10:19 by bturcott          #+#    #+#             */
-/*   Updated: 2019/04/23 20:38:03 by bturcott         ###   ########.fr       */
+/*   Updated: 2019/04/24 11:39:11 by bturcott         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "wolf.h"
+#define COLLISION(val) ((val < sqrt(pow(MOV_STEP / 10, 2)) ? 1 : 0))
 
 static void		rotations(t_sdl *sdl, SDL_Event e)
 {
@@ -43,52 +44,32 @@ static void		rotations(t_sdl *sdl, SDL_Event e)
 
 static void		movements(t_sdl *sdl, int key, float ang)
 {
-	char	fl;
 	char	yfl;
 	char	xfl;
 	int		x;
 	int		y;
 
-	fl = 0;
 	xfl = 1;
 	yfl = 1;
-	if (key == UP && (fl = 1))
-		;
-	else if (key == DOWN && (fl = 1))
-		ang += M_PI;
-	else if (key == LEFT && (fl = 1))
-		ang += M_PI * 0.5;
-	else if (key == RIGHT && (fl = 1))
-		ang += M_PI * 1.5;
-	if (fl)
-	{
-		y = sdl->cam.y - (int)((float)MOV_STEP * 2.0 * sin(ang));
-		x = sdl->cam.x + (int)((float)MOV_STEP * 2.0 * cos(ang));
-		if (x <= 0 || x >= MAP_W(sdl->map) * BLOCK ||
+	if (!(key == UP || key == DOWN || key == LEFT || key == RIGHT))
+		return ;
+	ang += (key == DOWN) ? M_PI : 0;
+	ang += (key == LEFT) ? M_PI * 0.5 : 0;
+	ang += (key == RIGHT) ? M_PI * 1.5 : 0;
+	y = sdl->cam.y - (int)((float)MOV_STEP * 2.0 * sin(ang));
+	x = sdl->cam.x + (int)((float)MOV_STEP * 2.0 * cos(ang));
+	if (x <= 0 || x >= MAP_W(sdl->map) * BLOCK ||
 				MAP(sdl->map)[MAP_W(sdl->map) * (sdl->cam.y / BLOCK) + x / BLOCK].h)
-			xfl = 0;
-		if (y <= 0 || y >= MAP_H(sdl->map) * BLOCK ||
+		xfl = 0;
+	if (y <= 0 || y >= MAP_H(sdl->map) * BLOCK ||
 				MAP(sdl->map)[MAP_W(sdl->map) * (y / BLOCK) + sdl->cam.x / BLOCK].h)
-			yfl = 0;
-		if (xfl && yfl)
-		{
-			sdl->cam.x += (int)((float)MOV_STEP * cos(ang));
-			sdl->cam.y -= (int)((float)MOV_STEP * sin(ang));
-			return ;
-		}
-		if (!yfl)
-		{
-			printf("angle to wall %d\n",
-				(int)(atan((float)(y - sdl->cam.y) / (float)(x - sdl->cam.x)) / M_PI * 180));
-	//		if (x - sdl->cam.x > 0)
-	//			movements(sdl, key,
-	//				ang + fabs(atan2(y - sdl->cam.y, x - sdl->cam.x)));
-	//		else
-	//			movements(sdl, key,
-	//				ang - fabs(atan2(y - sdl->cam.y, x - sdl->cam.x)));
-			return ;
-		}
-	}
+		yfl = 0;
+	if (xfl)
+		sdl->cam.x += (int)((float)MOV_STEP * cos(ang));
+	if (yfl)
+		sdl->cam.y -= (int)((float)MOV_STEP * sin(ang));
+	if (!xfl || !yfl)
+			sounds_control_panel(sdl->samples, 3);
 }
 
 static void		sdl_loop(t_sdl *sdl)
@@ -103,6 +84,7 @@ static void		sdl_loop(t_sdl *sdl)
 			printf("KEY %d\n", e.key.keysym.scancode);
 			if (e.key.type == SDL_KEYDOWN)
 			{
+				sounds(sdl, e);
 				movements(sdl, e.key.keysym.scancode, sdl->cam.angle);
 				if (e.key.keysym.scancode == 41 || e.quit.type == SDL_QUIT)
 					exit(clean_all(sdl, "exit on esc or red cross\n"));
