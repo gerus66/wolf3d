@@ -6,7 +6,7 @@
 /*   By: bturcott <bturcott@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/19 21:10:19 by bturcott          #+#    #+#             */
-/*   Updated: 2019/04/24 11:39:11 by bturcott         ###   ########.fr       */
+/*   Updated: 2019/04/24 14:34:26 by bturcott         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,8 +56,8 @@ static void		movements(t_sdl *sdl, int key, float ang)
 	ang += (key == DOWN) ? M_PI : 0;
 	ang += (key == LEFT) ? M_PI * 0.5 : 0;
 	ang += (key == RIGHT) ? M_PI * 1.5 : 0;
-	y = sdl->cam.y - (int)((float)MOV_STEP * 2.0 * sin(ang));
-	x = sdl->cam.x + (int)((float)MOV_STEP * 2.0 * cos(ang));
+	y = (float)sdl->cam.y - ((float)MOV_STEP * 2.0 * sin(ang));
+	x = (float)sdl->cam.x + ((float)MOV_STEP * 2.0 * cos(ang));
 	if (x <= 0 || x >= MAP_W(sdl->map) * BLOCK ||
 				MAP(sdl->map)[MAP_W(sdl->map) * (sdl->cam.y / BLOCK) + x / BLOCK].h)
 		xfl = 0;
@@ -135,7 +135,7 @@ int				main(int argc, char **argv)
 	t_sdl 	sdl;
 	int		fd;
 
-	sdl.cam.x = 100;
+	sdl.cam.x = 50;
 	sdl.cam.y = 300;
 	sdl.cam.angle = 0.0;
 	sdl.cam.horiz = WIN_H / 2;

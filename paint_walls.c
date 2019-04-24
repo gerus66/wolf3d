@@ -6,7 +6,7 @@
 /*   By: bturcott <bturcott@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/25 19:57:27 by mbartole          #+#    #+#             */
-/*   Updated: 2019/04/19 16:58:16 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/04/24 13:12:53 by bturcott         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,13 +37,16 @@ void			paint_walls(t_sdl *sdl, int *params)
 	
 	if (params[3] == -1)
 		return ;
-	texture.h = 2 * params[0];
+	texture.h = params[0];
 	texture.w = 2;
 	texture.x = params[1];
 	texture.y = sdl->cam.horiz - params[0];
 	convert_texture(sdl->texture_pack[params[3]], texture, &object, params[2]);
 	SDL_RenderCopy(sdl->render, sdl->texture_pack[params[3]], &object,
-			&texture);		
+			&texture);
+	texture.y += params[0];
+	SDL_RenderCopy(sdl->render, sdl->texture_pack[params[3]], &object,
+			&texture);
 }
 
 /*
