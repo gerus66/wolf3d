@@ -6,12 +6,12 @@
 /*   By: bturcott <bturcott@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/19 21:10:19 by bturcott          #+#    #+#             */
-/*   Updated: 2019/04/24 14:34:26 by bturcott         ###   ########.fr       */
+/*   Updated: 2019/04/24 15:36:31 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "wolf.h"
-#define COLLISION(val) ((val < sqrt(pow(MOV_STEP / 10, 2)) ? 1 : 0))
+//#define COLLISION(val) ((val < sqrt(pow(MOV_STEP / 10, 2)) ? 1 : 0))
 
 static void		rotations(t_sdl *sdl, SDL_Event e)
 {
@@ -21,7 +21,7 @@ static void		rotations(t_sdl *sdl, SDL_Event e)
 			sdl->cam.horiz -= MOV_STEP;
 		else if (e.motion.yrel < -2 && sdl->cam.horiz < WIN_H - 5 * MOV_STEP)
 			sdl->cam.horiz += MOV_STEP;
-		if (e.motion.xrel > 5)	
+		if (e.motion.xrel > 5)
 			sdl->cam.angle -= ROT_STEP;
 		else if (e.motion.xrel < -5)
 			sdl->cam.angle += ROT_STEP;
@@ -29,14 +29,14 @@ static void		rotations(t_sdl *sdl, SDL_Event e)
 	}
 	if (e.key.keysym.scancode >= 79 && e.key.keysym.scancode <= 82)
 	{
-		if (e.key.keysym.scancode == 79)	
+		if (e.key.keysym.scancode == 79)
 			sdl->cam.angle -= ROT_STEP;
 		else if (e.key.keysym.scancode == 80)
 			sdl->cam.angle += ROT_STEP;
-		else if (e.key.keysym.scancode == 81 && sdl->cam.horiz > 5 * MOV_STEP)	
+		else if (e.key.keysym.scancode == 81 && sdl->cam.horiz > 5 * MOV_STEP)
 			sdl->cam.horiz -= MOV_STEP;
 		else if (e.key.keysym.scancode == 82 &&
-				sdl->cam.horiz < WIN_H - 5 * MOV_STEP)	
+				sdl->cam.horiz < WIN_H - 5 * MOV_STEP)
 			sdl->cam.horiz += MOV_STEP;
 		fit_angle(&(sdl->cam.angle));
 	}
@@ -59,17 +59,17 @@ static void		movements(t_sdl *sdl, int key, float ang)
 	y = (float)sdl->cam.y - ((float)MOV_STEP * 2.0 * sin(ang));
 	x = (float)sdl->cam.x + ((float)MOV_STEP * 2.0 * cos(ang));
 	if (x <= 0 || x >= MAP_W(sdl->map) * BLOCK ||
-				MAP(sdl->map)[MAP_W(sdl->map) * (sdl->cam.y / BLOCK) + x / BLOCK].h)
+			MAP(sdl->map)[MAP_W(sdl->map) * (sdl->cam.y / BLOCK) + x / BLOCK].h)
 		xfl = 0;
 	if (y <= 0 || y >= MAP_H(sdl->map) * BLOCK ||
-				MAP(sdl->map)[MAP_W(sdl->map) * (y / BLOCK) + sdl->cam.x / BLOCK].h)
+			MAP(sdl->map)[MAP_W(sdl->map) * (y / BLOCK) + sdl->cam.x / BLOCK].h)
 		yfl = 0;
 	if (xfl)
 		sdl->cam.x += (int)((float)MOV_STEP * cos(ang));
 	if (yfl)
 		sdl->cam.y -= (int)((float)MOV_STEP * sin(ang));
 	if (!xfl || !yfl)
-			sounds_control_panel(sdl->samples, 3);
+		sounds_control_panel(sdl->samples, 3);
 }
 
 static void		sdl_loop(t_sdl *sdl)
@@ -81,7 +81,6 @@ static void		sdl_loop(t_sdl *sdl)
 		if (SDL_PollEvent(&e))
 		{
 			rotations(sdl, e);
-			printf("KEY %d\n", e.key.keysym.scancode);
 			if (e.key.type == SDL_KEYDOWN)
 			{
 				sounds(sdl, e);
@@ -94,8 +93,6 @@ static void		sdl_loop(t_sdl *sdl)
 					sdl->flags[1] = sdl->flags[1] ? 0 : 1;
 				if (e.key.keysym.scancode == SWITCH_MOUSE)
 					sdl->flags[2] = sdl->flags[2] ? 0 : 1;
-				printf("x-> %d y-> %d cos-> %f sin-> %f\n", sdl->cam.x,
-					sdl->cam.y, cos(sdl->cam.angle), sin(sdl->cam.angle));
 			}
 			reprint_all(sdl);
 		}
@@ -132,30 +129,22 @@ static void		init_sdl(t_sdl *sdl)
 
 int				main(int argc, char **argv)
 {
-	t_sdl 	sdl;
+	t_sdl	sdl;
 	int		fd;
 
 	sdl.cam.x = 50;
 	sdl.cam.y = 300;
-	sdl.cam.angle = 0.0;
+	sdl.cam.angle = (float)M_PI / 2;
 	sdl.cam.horiz = WIN_H / 2;
-	printf("Distance to proj plane %d\n", (int)DIST);
-	printf("View point on [%d, %d, %d] angle %.1f\n",
-			sdl.cam.x, sdl.cam.y, CAM_H, sdl.cam.angle);
-	printf("Step at angle is %.5f radian\n", STEP);
-	printf("Height of wall %d\n", WALL_H);
-
 	if (argc == 1 && (fd = open(MAP_DEFAULT, O_RDONLY)) == -1)
 		return (clean_all(&sdl, "Cant open default map\n"));
 	else if (argc == 2 && (fd = open(argv[1], O_RDONLY)) == -1)
 		return (clean_all(&sdl, "Cant open custom map\n"));
 	else if (argc > 2)
 		return (clean_all(&sdl, USAGE));
-
 	read_map(&sdl, fd);
 	init_sdl(&sdl);
 	init_music(&sdl);
 	sdl_loop(&sdl);
-
 	return (0);
 }

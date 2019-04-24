@@ -6,7 +6,7 @@
 /*   By: bturcott <bturcott@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/12/20 22:02:59 by mbartole          #+#    #+#             */
-/*   Updated: 2019/04/24 10:56:11 by bturcott         ###   ########.fr       */
+/*   Updated: 2019/04/24 15:04:23 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,8 +73,8 @@ typedef struct	s_sdl
 # define MAP_H(x) ((int)(x->len / x->offset / sizeof(t_point)))
 
 # define NAME "Wolf3D"
-# define WIN_POS_X 1000
-# define WIN_POS_Y 1000
+# define WIN_POS_X 500
+# define WIN_POS_Y 500
 # define WIN_W 1500
 # define WIN_H 1000
 # define WIN_FLAGS 0
@@ -120,6 +120,12 @@ void			read_map(t_sdl *sbox, int fd);
 */
 
 void			draw_map(t_sdl *sdl, unsigned int *map);
+
+/*
+** get height of wall (ray-casting, in fact) /get_height.c (5)/
+*/
+
+float			get_height(t_sdl *sbox, float ang, int *offset, char *fl);
 
 /*
 ** casting of walls
