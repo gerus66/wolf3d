@@ -6,7 +6,7 @@
 /*   By: bturcott <bturcott@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/20 20:42:36 by mbartole          #+#    #+#             */
-/*   Updated: 2019/04/23 23:06:17 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/04/24 12:38:25 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -167,7 +167,7 @@ static void		get_floor_offset(t_sdl *sbox, float ang, int *off_x, int *off_y)
 		*off_y += sbox->floor->w;
 	*off_y -= QT_12(ang) ? sbox->cam.y * coef % sbox->floor->w
 				: sbox->floor->w - sbox->cam.y * coef % sbox->floor->w;
-	*off_y =  QT_14(ang) ? sbox->floor->w - *off_y % sbox->floor->w :
+	*off_y =  QT_12(ang) ? sbox->floor->w - *off_y % sbox->floor->w :
 		*off_y % sbox->floor->w;
 	if (*off_y == sbox->floor->w)
 		*off_y = 0;
