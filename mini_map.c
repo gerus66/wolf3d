@@ -6,7 +6,7 @@
 /*   By: bturcott <bturcott@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/25 20:31:26 by mbartole          #+#    #+#             */
-/*   Updated: 2019/04/25 15:11:57 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/04/25 15:35:11 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,7 +103,8 @@ void	draw_map(t_sdl *sdl, unsigned int *map)
 	while (i++ < MAP_H(sdl->map) * sdl->map->offset * 900)
 		if (i < MAP_W(sdl->map) * 30 || (i) % (MAP_W(sdl->map) * 30) \
 		== 0 || i / MAP_W(sdl->map) == MAP_H(sdl->map) - 10 || \
-		(i + 1) % (MAP_W(sdl->map) * 30) == 0)
+		(i + 1) % (MAP_W(sdl->map) * 30) == 0 \
+		|| (i >= (MAP_W(sdl->map) * MAP_H(sdl->map) * 889)))
 			((unsigned int *)map)[i] = 0xFFFFFF;
 		else
 			((unsigned int *)map)[i] = 0x0;
