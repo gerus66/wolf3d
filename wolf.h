@@ -6,7 +6,7 @@
 /*   By: bturcott <bturcott@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/12/20 22:02:59 by mbartole          #+#    #+#             */
-/*   Updated: 2019/03/28 12:22:53 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/04/25 15:13:27 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 # include <math.h>
 # include "libft/libft.h"
 # include "SDL/includes/SDL.h"
+# include "SDL/includes/SDL_mixer.h"
 
 typedef struct	s_point
 {
@@ -25,17 +26,18 @@ typedef struct	s_point
 	int	h;
 }				t_point;
 
-typedef struct 	s_view
+typedef struct	s_view
 {
-	int	x;
-	int	y;
-	int	horiz;
+	int		x;
+	int		y;
+	int		horiz;
 	float	angle;
 }				t_view;
 
 /*
-** flags: 0 - show mini-map; 
-**		  1 - swith on texture on walls
+** flags: 0 - show mini-map; /m/
+**		  1 - swith on texture on walls /t/
+**        2 - on/off movement on mouse /space/
 */
 
 typedef struct	s_sdl
@@ -43,14 +45,24 @@ typedef struct	s_sdl
 	SDL_Window		*window;
 	SDL_Renderer	*render;
 	SDL_Texture		*text;
-	SDL_Texture		*plane;
 	SDL_Texture		*mapa;
-	unsigned char	flags[2];
+	unsigned char	flags[3];
 	int				mouse_pos[2];
 	t_vector		*map;
 	t_view			cam;
+	SDL_Surface		*floor;
 	SDL_Texture		**texture_pack;
+	Mix_Chunk		**samples;
+	Mix_Music		*music;
 }				t_sdl;
+
+# define UP 26
+# define RIGHT 7
+# define DOWN 22
+# define LEFT 4
+# define SWITCH_MAP 16
+# define SWITCH_TEXT 23
+# define SWITCH_MOUSE 44
 
 # define USAGE "./wolf [path_to_file_with_map]\n"
 
@@ -59,12 +71,11 @@ typedef struct	s_sdl
 # define MAP_W(x) ((int)x->offset)
 # define MAP_H(x) ((int)(x->len / x->offset / sizeof(t_point)))
 
-
 # define NAME "Wolf3D"
-# define WIN_POS_X 1000
-# define WIN_POS_Y 1000
-# define WIN_W 700
-# define WIN_H 700
+# define WIN_POS_X 500
+# define WIN_POS_Y 500
+# define WIN_W 1500
+# define WIN_H 1000
 # define WIN_FLAGS 0
 
 # define REN_FLAGS 0
@@ -93,33 +104,53 @@ typedef struct	s_sdl
 ** utils
 */
 
-int     		clean_all(t_sdl *sdl, char *msg);
+int				clean_all(t_sdl *sdl, char *msg);
 void			reprint_all(t_sdl *sdl);
+void			fit_angle(float *angle);
 
 /*
 ** read map from file
 */
 
-void            read_map(t_sdl *sbox, int fd);
+void			read_map(t_sdl *sbox, int fd);
+
+/*
+** handle movements and collisions
+*/
+
+void			movements(t_sdl *sdl, int key, float ang);
 
 /*
 ** create mini-map
 */
 
-void    draw_map(t_sdl *sdl, unsigned int *map);
+void			draw_map(t_sdl *sdl, unsigned int *map);
+
+/*
+** get height of wall (ray-casting, in fact)
+*/
+
+float			get_height(t_sdl *sbox, float ang, int *offset, char *fl);
 
 /*
 ** casting of walls
 */
 
-void    pixels_to_render(t_sdl *sbox, unsigned int *map);
-void    texts_to_render(t_sdl *sbox);
+void			pixels_to_render(t_sdl *sbox, unsigned int *map, float ang);
+void			texts_to_render(t_sdl *sbox, float ang);
 
 /*
 ** painting of walls
 */
 
-SDL_Texture             **load_textures(t_sdl *sdl);
-void					paint_walls(t_sdl *sdl, float ang, int *params, char side);
+void			paint_walls(t_sdl *sdl, int *params);
+
+/*
+** playing music
+*/
+
+int				init_music(t_sdl *sdl);
+int				sounds_control_panel(Mix_Chunk **samples, int command);
+void			sounds(t_sdl *sdl, SDL_Event e);
 
 #endif
