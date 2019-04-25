@@ -6,117 +6,115 @@
 /*   By: bturcott <bturcott@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/25 20:31:26 by mbartole          #+#    #+#             */
-/*   Updated: 2019/03/28 16:31:29 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/04/25 12:01:18 by bturcott         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "wolf.h"
+#define LINES_COS1(x) (-1 * cos(x + 210))
+#define LINES_SIN1(x) (1 * sin(x + 210))
+#define LINES_COS2(x) (-1 * cos(x + 60))
+#define LINES_SIN2(x) (1 * sin(x + 60))
 
-void draw_lines(float *c, float angle, unsigned int *map, t_sdl *sdl)
+int		draw_lines_iter(int *c, float *iters, int offs, unsigned int *map)
 {
-	const float step[4] = {-5 * cos(angle + 210), 5 * sin(angle + 210), \
-	-5 * cos(angle + 60), 5 * sin(angle + 60)};
-	float v[5];
-	
-	v[0] = step[0];
-	v[1] = step[1];
-	v[2] = step[2];
-	v[3] = step[3];
-	v[4] = 0;
-	while (v[4] < 15)
+	int it2;
+
+	it2 = c[2];
+	if (map[(offs * 30 * (int)(iters[1] + c[1] + it2 * cos(iters[5] + 90))) \
+	+ (int)(iters[0] + c[0] + it2 * sin(iters[5] + 90))] == 0xFFFFFF \
+	|| map[(offs * 30 * (int)(iters[3] + c[1] - it2 * cos(iters[5] \
+	+ 180))) + (int)(iters[2] + c[0] - it2 * sin(iters[5] + 180))] == 0xFFFFFF)
+		return (0);
+	if (map[(offs * 30 * (int)(iters[1] + c[1])) + (int)(iters[0] \
+		+ c[0])] == 0xFFFFFF || map[(offs * 30 * (int)(iters[3] + \
+		c[1])) + (int)(iters[2] + c[0])] == 0xFFFFFF)
+		return (0);
+	map[(offs * 30 * (int)(iters[1] + (float)c[1]))\
+	+ (int)(iters[0] + (float)c[0])] = 0x00FFFF;
+	map[(offs * 30 * (int)(iters[3] + (float)c[1]))\
+	+ (int)(iters[2] + (float)c[0])] = 0x00FFFF;
+	return (1);
+}
+
+void	draw_player(int *c, float ang, unsigned int *map, int offs)
+{
+	float		it[6];
+	int			it2;
+
+	ft_bzero((void *)it, 6 * sizeof(float));
+	it[5] = ang;
+	while (c[2]++ < 100)
 	{
-		if (map[(sdl->map->offset * 30 * (int)(v[1] + c[1])) + (int)(v[0] \
-		+ c[0])] == 0xFFFFFF || map[(sdl->map->offset * 30 * (int)(v[3] + \
-		c[1])) + (int)(v[2] + c[0])] == 0xFFFFFF)
+		if (!(draw_lines_iter(c, it, offs, map)))
 			break ;
-		map[(sdl->map->offset * 30 * (int)(v[1] + c[1]))\
-		 + (int)(v[0] + c[0])] = 0x00FFFF;
-		map[(sdl->map->offset * 30 * (int)(v[3] + c[1]))\
-		 + (int)(v[2] + c[0])] = 0x00FFFF;
-	v[0] += step[0];
-	v[1] += step[1];
-	v[2] += step[2];
-	v[3] += step[3];
-		v[4]++;
-	}
-}
-
-void draw_a_char(int *coords, t_sdl *sdl, unsigned int *map)
-{
-	int rad;
-	int x;
-	int y;
-	int center[2];
-
-	rad = 30;
-	y = coords[0];
-	x = coords[1];
-	center[0] = coords[0] - 15;
-	center[1] = coords[1] - 15;
-	coords[0] -= 30;
-	coords[1] -= 30;
-	while (coords[0] < y)
-	{
-		coords[1] = x - 30;
-		while (coords[1] < x)
+		it2 = (int)c[2];
+		while (it2 <= 30 && it2 >= 10 && it2--)
 		{
-			if (sqrt(pow(coords[0] - center[0], 2) + (pow(coords[1] \
-			- center[1], 2))) <= 15) 
-				map[sdl->map->offset * 30 * coords[0] + coords[1]] = 0xFFF;
-			coords[1]++;
+			map[(offs * 30 * (int)(it[1] + (float)c[1] + it2 * cos(ang + 90))) \
+			+ (int)(it[0] + (float)c[0] + it2 * sin(ang + 90))] = 0xFFF00F;
+			map[(offs * 30 * (int)(it[3] + c[1] - it2 * cos(ang + 180))) \
+			+ (int)(it[2] + (float)c[0] - it2 * sin(ang + 180))] = 0xFFF00F;
+			if (it2 < 10)
+				break ;
 		}
-		coords[0]++;
+		it[0] += LINES_COS1(ang);
+		it[1] += LINES_SIN1(ang);
+		it[2] += LINES_COS2(ang);
+		it[3] += LINES_SIN2(ang);
 	}
 }
 
-void draw_a_block(int *coords, t_sdl *sdl, unsigned int *map, char type)
+void	draw_a_block(int *c, t_sdl *sdl, unsigned int *map, char type)
 {
 	int y;
 	int x;
 
 	if (type == 'w')
 	{
-		coords[0] *= 30;
-		y = coords[0] + 30;
-		x = coords[1] * 30 + 30;
-		while (coords[0] < y)
+		c[0] *= 30;
+		y = c[0] + 30;
+		x = c[1] * 30 + 30;
+		while (c[0] < y)
 		{
-			coords[1] = x - 30;
-			while (coords[1] < x)
+			c[1] = x - 30;
+			while (c[1] < x)
 			{
-				map[sdl->map->offset * 30 * coords[0] + coords[1]] = 0xFFFFFF;
-				coords[1]++;
+				map[sdl->map->offset * 30 * c[0] + c[1]] = 0xFFFFFF;
+				c[1]++;
 			}
-			coords[0]++;
+			c[0]++;
 		}
 	}
 	else
 	{
-		draw_a_char((int[]){sdl->cam.y * 30 / 64 + 15, sdl->cam.x * 30 / 64 + 15}, sdl, map);
-		draw_lines((float[]){sdl->cam.x * 30 / 64 , sdl->cam.y * 30 / 64}, \
-		sdl->cam.angle, map, sdl);
+		draw_player((int[]){sdl->cam.x * 30 / BLOCK, sdl->cam.y * 30 \
+		/ BLOCK, 0}, sdl->cam.angle, map, sdl->map->offset);
 	}
 }
 
-void draw_map(t_sdl *sdl, unsigned int *map)
+void	draw_map(t_sdl *sdl, unsigned int *map)
 {
-	t_point *m;
-	int 	i;
+	t_point	*m;
+	int		i;
 
 	i = 0;
 	m = (t_point *)sdl->map->cont;
-	while (i < MAP_H(sdl->map) * sdl->map->offset * 900)
-		((unsigned int *)map)[++i] = 0xF;
-	i = 0;
-	while (i < sdl->map->offset * MAP_H(sdl->map))
+	while (i++ < MAP_H(sdl->map) * sdl->map->offset * 900)
+		if (i < MAP_W(sdl->map) * 30 || (i) % (MAP_W(sdl->map) * 30) \
+		== 0 || i / MAP_W(sdl->map) == MAP_H(sdl->map) - 10 || \
+		(i + 1) % (MAP_W(sdl->map) * 30) == 0)
+			((unsigned int *)map)[i] = 0xFFFFFF;
+		else
+			((unsigned int *)map)[i] = 0x0;
+	i = -1;
+	while (++i < sdl->map->offset * MAP_H(sdl->map))
 	{
 		if (m[i].h)
 		{
 			draw_a_block((int[2]){i / sdl->map->offset, \
 			i % sdl->map->offset}, sdl, map, 'w');
 		}
-		i++;
 	}
-	 draw_a_block((int[2]){sdl->cam.x, sdl->cam.y}, sdl, map, 'p');
-	
+	draw_a_block((int[2]){sdl->cam.x, sdl->cam.y}, sdl, map, 'p');
 }
