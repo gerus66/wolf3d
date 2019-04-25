@@ -17,7 +17,7 @@ OBJ = $(SRC:.c=.o)
 HDR = wolf.h
 LIB = libft/libft.a
 LIBDIR = libft/
-FLAGS =
+FLAGS = -Wall -Wextra -Werror
 #MFL = -lmlx -framework OpenGL -framework AppKit
 #MLX = /usr/local/lib/
 #MLXH = /usr/local/include
@@ -32,7 +32,7 @@ lib:
 	make -C $(LIBDIR)
 
 $(NAME): $(OBJ)
-	gcc $(LIB) -I $(SDLH) -L $(SDL) -L $(SDL_MIXER) $(SDLFL) $(OBJ) -o $(NAME)
+	gcc $(FLAGS) $(LIB) -I $(SDLH) -L $(SDL) -L $(SDL_MIXER) $(SDLFL) $(OBJ) -o $(NAME)
 
 %.o: %.c $(HDR) $(LIB)
 	gcc $(FLAGS) -c $< -o $@

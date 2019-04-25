@@ -6,7 +6,7 @@
 /*   By: bturcott <bturcott@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/25 20:33:54 by mbartole          #+#    #+#             */
-/*   Updated: 2019/04/24 17:42:06 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/04/25 14:46:18 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,8 @@ int			clean_all(t_sdl *sdl, char *msg)
 {
 	int	i;
 
-	free(sdl->map);
+	if (sdl->map)
+		ft_vdel(&(sdl->map));
 	SDL_FreeSurface(sdl->floor);
 	SDL_DestroyTexture(sdl->text);
 	SDL_DestroyTexture(sdl->mapa);
@@ -24,8 +25,13 @@ int			clean_all(t_sdl *sdl, char *msg)
 	while (++i < 4)
 		SDL_DestroyTexture(sdl->texture_pack[i]);
 	free(sdl->texture_pack);
+	i = -1;
+	while (++i < 4)
+		Mix_FreeChunk(sdl->samples[i]);
+	free(sdl->samples);
 	SDL_DestroyRenderer(sdl->render);
 	SDL_DestroyWindow(sdl->window);
+	Mix_FreeMusic(sdl->music);
 	SDL_Quit();
 	write(1, msg, ft_strlen(msg));
 	return (0);

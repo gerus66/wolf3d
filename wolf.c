@@ -6,7 +6,7 @@
 /*   By: bturcott <bturcott@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/19 21:10:19 by bturcott          #+#    #+#             */
-/*   Updated: 2019/04/24 16:11:38 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/04/25 14:50:43 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,10 +33,10 @@ static void				rotations(t_sdl *sdl, SDL_Event e)
 		else if (e.key.keysym.scancode == 80)
 			sdl->cam.angle += ROT_STEP;
 		else if (e.key.keysym.scancode == 81 && sdl->cam.horiz > 5 * MOV_STEP)
-			sdl->cam.horiz -= MOV_STEP;
+			sdl->cam.horiz -= 2 * MOV_STEP;
 		else if (e.key.keysym.scancode == 82 &&
 				sdl->cam.horiz < WIN_H - 5 * MOV_STEP)
-			sdl->cam.horiz += MOV_STEP;
+			sdl->cam.horiz += 2 * MOV_STEP;
 		fit_angle(&(sdl->cam.angle));
 	}
 }
@@ -68,25 +68,32 @@ static void				sdl_loop(t_sdl *sdl)
 	}
 }
 
-static SDL_Texture		**load_textures(t_sdl *sdl)
+static void				load_textures(t_sdl *sdl)
 {
-	SDL_Texture **texts;
+	SDL_Surface	*sf;
 
-	if (!(texts = ft_memalloc(sizeof(SDL_Texture *) * 4)))
+	if (!(sdl->texture_pack = ft_memalloc(sizeof(SDL_Texture *) * 4)))
 		exit(clean_all(sdl, "Malloc fail\n"));
-	if (!(texts[0] = SDL_CreateTextureFromSurface(sdl->render,
-					SDL_LoadBMP("textures/1.bmp"))))
+	if (!(sf = SDL_LoadBMP("textures/1.bmp")) ||
+		!(sdl->texture_pack[0] = SDL_CreateTextureFromSurface(sdl->render, sf)))
 		exit(clean_all(sdl, "Texture loading fail\n"));
-	if (!(texts[1] = SDL_CreateTextureFromSurface(sdl->render,
-					SDL_LoadBMP("textures/2.bmp"))))
+	SDL_FreeSurface(sf);
+	if (!(sf = SDL_LoadBMP("textures/2.bmp")) ||
+		!(sdl->texture_pack[1] = SDL_CreateTextureFromSurface(sdl->render, sf)))
 		exit(clean_all(sdl, "Texture loading fail\n"));
-	if (!(texts[2] = SDL_CreateTextureFromSurface(sdl->render,
-					SDL_LoadBMP("textures/3.bmp"))))
+	SDL_FreeSurface(sf);
+	if (!(sf = SDL_LoadBMP("textures/3.bmp")) ||
+		!(sdl->texture_pack[2] = SDL_CreateTextureFromSurface(sdl->render, sf)))
 		exit(clean_all(sdl, "Texture loading fail\n"));
-	if (!(texts[3] = SDL_CreateTextureFromSurface(sdl->render,
-					SDL_LoadBMP("textures/4.bmp"))))
+	SDL_FreeSurface(sf);
+	if (!(sf = SDL_LoadBMP("textures/4.bmp")) ||
+		!(sdl->texture_pack[3] = SDL_CreateTextureFromSurface(sdl->render, sf)))
 		exit(clean_all(sdl, "Texture loading fail\n"));
-	return (texts);
+	SDL_FreeSurface(sf);
+	if (!(sf = SDL_LoadBMP("textures/floor.bmp")))
+		exit(clean_all(sdl, "No Floor texture"));
+	sdl->floor = SDL_ConvertSurfaceFormat(sf, TXT_FORMAT, 0);
+	SDL_FreeSurface(sf);
 }
 
 static void				init_sdl(t_sdl *sdl)
@@ -104,10 +111,7 @@ static void				init_sdl(t_sdl *sdl)
 	if (!(sdl->mapa = SDL_CreateTexture(sdl->render, TXT_FORMAT, TXT_ACCESS,
 					sdl->map->offset * 30, MAP_H(sdl->map) * 30)))
 		exit(clean_all(sdl, "Cant create the map\n"));
-	sdl->texture_pack = load_textures(sdl);
-	if (!(sdl->floor = SDL_LoadBMP("textures/floor.bmp")))
-		exit(clean_all(sdl, "No Floor texture"));
-	sdl->floor = SDL_ConvertSurfaceFormat(sdl->floor, TXT_FORMAT, 0);
+	load_textures(sdl);
 	sdl->flags[0] = 0;
 	sdl->flags[1] = 0;
 	sdl->flags[2] = 0;
@@ -118,8 +122,8 @@ int						main(int argc, char **argv)
 	t_sdl	sdl;
 	int		fd;
 
-	sdl.cam.x = 50;
-	sdl.cam.y = 300;
+	sdl.cam.x = 30;
+	sdl.cam.y = 30;
 	sdl.cam.angle = 0.0;
 	sdl.cam.horiz = WIN_H / 2;
 	if (argc == 1 && (fd = open(MAP_DEFAULT, O_RDONLY)) == -1)

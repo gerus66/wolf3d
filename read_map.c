@@ -6,7 +6,7 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/12/20 22:02:06 by mbartole          #+#    #+#             */
-/*   Updated: 2019/04/24 17:35:10 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/04/25 14:47:13 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,16 +33,16 @@ static size_t	one_line(size_t len, char *line, t_sdl *sbox, size_t i)
 	free(line);
 	len = len ? len : ft_arlen(ar);
 	if (ft_arlen(ar) != len)
-		exit(clean_all(sbox, "Invalid map\n"));
+		exit(0);
 	j = -1;
 	while (++j < len)
 	{
 		if (!(pt = (t_point *)malloc(sizeof(t_point))))
-			exit(clean_all(sbox, "Cant allocate memory"));
+			exit(0);
 		*pt = (t_point){j, i, ft_atoi(ar[j])};
 		free(ar[j]);
 		if (!(ft_vadd(sbox->map, pt, sizeof(t_point))))
-			exit(clean_all(sbox, "Cant allocate memory"));
+			exit(0);
 		free(pt);
 	}
 	free(ar);
@@ -70,9 +70,9 @@ void			read_map(t_sdl *sbox, int fd)
 	while ((r = get_next_line(fd, &line)))
 	{
 		if (r == -1)
-			exit(clean_all(sbox, "Invalid file\n"));
+			exit(0);
 		len = one_line(len, line, sbox, i++);
 	}
 	if (!(sbox->map->offset = len) || len == 1)
-		exit(clean_all(sbox, "Invalid map\n"));
+		exit(0);
 }

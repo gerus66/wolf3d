@@ -6,7 +6,7 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/24 16:07:14 by mbartole          #+#    #+#             */
-/*   Updated: 2019/04/24 16:07:55 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/04/25 14:58:25 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,15 +19,14 @@ void		movements(t_sdl *sdl, int key, float ang)
 	int		x;
 	int		y;
 
-	xfl = 1;
 	yfl = 1;
-	if (!(key == UP || key == DOWN || key == LEFT || key == RIGHT))
+	if ((xfl = 1) && !(key == UP || key == DOWN || key == LEFT || key == RIGHT))
 		return ;
 	ang += (key == DOWN) ? M_PI : 0;
 	ang += (key == LEFT) ? M_PI * 0.5 : 0;
 	ang += (key == RIGHT) ? M_PI * 1.5 : 0;
-	y = (float)sdl->cam.y - ((float)MOV_STEP * 2.0 * sin(ang));
-	x = (float)sdl->cam.x + ((float)MOV_STEP * 2.0 * cos(ang));
+	y = sdl->cam.y - (int)((float)MOV_STEP * 2.0 * sin(ang));
+	x = sdl->cam.x + (int)((float)MOV_STEP * 2.0 * cos(ang));
 	if (x <= 0 || x >= MAP_W(sdl->map) * BLOCK ||
 			MAP(sdl->map)[MAP_W(sdl->map) * (sdl->cam.y / BLOCK) + x / BLOCK].h)
 		xfl = 0;

@@ -6,14 +6,14 @@
 /*   By: bturcott <bturcott@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/25 19:57:27 by mbartole          #+#    #+#             */
-/*   Updated: 2019/04/24 16:12:08 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/04/25 13:48:08 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "wolf.h"
 
-static void		convert_texture(SDL_Texture *texture, SDL_Rect position,
-									SDL_Rect *object, int offset)
+static void		convert_texture(SDL_Texture *texture, SDL_Rect *object,
+						int offset)
 {
 	SDL_Rect curr;
 
@@ -42,7 +42,7 @@ void			paint_walls(t_sdl *sdl, int *params)
 	texture.w = 2;
 	texture.x = params[1];
 	texture.y = sdl->cam.horiz - params[0];
-	convert_texture(sdl->texture_pack[params[3]], texture, &object, params[2]);
+	convert_texture(sdl->texture_pack[params[3]], &object, params[2]);
 	SDL_RenderCopy(sdl->render, sdl->texture_pack[params[3]], &object,
 			&texture);
 	texture.y += params[0];
@@ -66,7 +66,6 @@ static int		select_text(float ang, char fl)
 void			texts_to_render(t_sdl *sbox, float ang)
 {
 	int		i;
-	int		j;
 	int		h;
 	char	fl;
 	int		offset;
