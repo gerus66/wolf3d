@@ -6,7 +6,7 @@
 /*   By: bturcott <bturcott@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/19 21:10:19 by bturcott          #+#    #+#             */
-/*   Updated: 2019/04/25 15:13:11 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/04/26 12:16:03 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,9 +127,9 @@ int						main(int argc, char **argv)
 	sdl.cam.angle = 0.0;
 	sdl.cam.horiz = WIN_H / 2;
 	if (argc == 1 && (fd = open(MAP_DEFAULT, O_RDONLY)) == -1)
-		return (clean_all(&sdl, "Cant open default map\n"));
+		return (0);
 	else if (argc == 2 && (fd = open(argv[1], O_RDONLY)) == -1)
-		return (clean_all(&sdl, "Cant open custom map\n"));
+		return (0);
 	else if (argc > 2)
 		return (clean_all(&sdl, USAGE));
 	read_map(&sdl, fd);
