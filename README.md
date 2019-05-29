@@ -1,5 +1,5 @@
 ## Wolfenstein3D
-Движок одноименной игры ([здесь](https://github.com/gerus66/norme) подробнее).
+Движок одноименной игры ([здесь](https://github.com/gerus66/wolfenstein3d/blob/master/readme/wolf3d.en.pdf) подробнее).
 
 Графика по принципу _raycasting_, текстуры и озвучка на _SDL2_
 ### Управление
@@ -26,4 +26,4 @@
 ![Alt text](https://github.com/gerus66/wolfenstein3d/blob/master/readme/wolf_1.png)
 ![Alt text](https://github.com/gerus66/wolfenstein3d/blob/master/readme/wolf_2.png)
 ### Codestyle
-Проект написан в строгом соответствии с [Norminette codestyle](https://github.com/gerus66/wolfenstein3d/blob/master/readme/Norme.md)
+Проект написан в строгом соответствии с [Norminette codestyle](https://github.com/gerus66/norme)
