@@ -1,7 +1,15 @@
 ## Wolfenstein3D
 Движок одноименной игры ([здесь](https://github.com/gerus66/wolfenstein3d/blob/master/readme/wolf3d.en.pdf) подробнее).
 
-Графика по принципу _raycasting_, текстуры и озвучка на _SDL2_
+Вычисления по принципу _raycasting_, текстуры и озвучка на _SDL2_
+### Run
+_macos_: `make & ./wolf [path_to_map]`
+
+_linux_: в процессе тестирования
+
+При запуске без аргументов откроется карта _maps/default.map_, но Вы можете указать путь к любому другому файлу.
+
+Карта прямоугольная, состоит из нулей(открытое пространство) и любых других чисел(стены).
 ### Управление
 
 `WASD` передвижение
@@ -23,7 +31,7 @@
 * звук при столкновении со стенами
 * скольжение вдоль стен
 ### Скриншоты
-![Alt text](https://github.com/gerus66/wolfenstein3d/blob/master/readme/wolf_1.png)
-![Alt text](https://github.com/gerus66/wolfenstein3d/blob/master/readme/wolf_2.png)
+![wolf](https://github.com/gerus66/wolfenstein3d/blob/master/readme/wolf_1.png)
+![wolf](https://github.com/gerus66/wolfenstein3d/blob/master/readme/wolf_2.png)
 ### Codestyle
 Проект написан в строгом соответствии с [Norminette codestyle](https://github.com/gerus66/norme)
